@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulator - Edition computer</title>
+<title>FRANCIENTEC - Simulator Edition Pro</title>
 <style>
   :root {
     --primary-red: #e60000;
@@ -13,14 +13,10 @@
     --text-color: #e0e0e0;
     --accent-glow: rgba(230, 0, 0, 0.4);
     --gold-accent: #ffb700;
+    --cyan-accent: #00e5ff;
   }
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
   body {
     background-color: var(--bg-dark);
@@ -30,7 +26,6 @@
     overflow: hidden;
   }
 
-  /* --- Panel Lateral --- */
   #sidebar {
     width: 350px;
     background: var(--panel-bg);
@@ -45,19 +40,10 @@
     flex-shrink: 0;
   }
 
-  #sidebar::-webkit-scrollbar {
-    width: 6px;
-  }
-  #sidebar::-webkit-scrollbar-track {
-    background: #111;
-  }
-  #sidebar::-webkit-scrollbar-thumb {
-    background: var(--dark-red);
-    border-radius: 4px;
-  }
-  #sidebar::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-red);
-  }
+  #sidebar::-webkit-scrollbar { width: 6px; }
+  #sidebar::-webkit-scrollbar-track { background: #111; }
+  #sidebar::-webkit-scrollbar-thumb { background: var(--dark-red); border-radius: 4px; }
+  #sidebar::-webkit-scrollbar-thumb:hover { background: var(--primary-red); }
 
   .brand-title {
     font-size: 20px;
@@ -87,7 +73,6 @@
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s ease;
     text-transform: uppercase;
     font-size: 11px;
     letter-spacing: 1px;
@@ -103,31 +88,25 @@
     border-color: #444466;
   }
 
-  .nav-btn:hover {
-    background: var(--primary-red);
-    border-color: #ff4d4d;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px var(--accent-glow);
-  }
+  .nav-btn:hover { background: var(--primary-red); border-color: #ff4d4d; box-shadow: 0 6px 15px var(--accent-glow); }
+  .nav-btn.tech-btn:hover { background: #3b3b5c; border-color: var(--gold-accent); box-shadow: 0 6px 15px rgba(255, 183, 0, 0.2); }
 
-  .nav-btn.tech-btn:hover {
-    background: #3b3b5c;
-    border-color: var(--gold-accent);
-    box-shadow: 0 6px 15px rgba(255, 183, 0, 0.2);
-  }
+  .color-picker-container { width: 100%; }
+  .color-picker-container label { display: flex; justify-content: space-between; align-items: center; width: 100%; }
 
-  .color-picker-container {
+  .custom-select {
     width: 100%;
+    background: #181824;
+    color: #fff;
+    border: 1px solid #444466;
+    padding: 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 11px;
+    outline: none;
+    cursor: pointer;
   }
 
-  .color-picker-container label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
-
-  /* --- Área Principal --- */
   #game-container {
     flex: 1;
     position: relative;
@@ -137,12 +116,7 @@
     background: radial-gradient(circle, #1a1a20 0%, #050507 100%);
   }
 
-  canvas {
-    display: block;
-    background: #4b4b4b;
-    box-shadow: 0 0 30px rgba(169, 0, 0, 0.8);
-    border-radius: 4px;
-  }
+  canvas { display: block; background: #4b4b4b; box-shadow: 0 0 30px rgba(169, 0, 0, 0.8); border-radius: 4px; }
 
   #audioToggle {
     position: absolute;
@@ -157,15 +131,34 @@
     font-size: 12px;
     font-weight: bold;
     z-index: 20;
-    transition: all 0.2s ease;
   }
 
-  #audioToggle:hover {
-    border-color: var(--primary-red);
-    color: var(--primary-red);
+  #audioToggle:hover { border-color: var(--primary-red); color: var(--primary-red); }
+
+  #telemetryOverlay {
+    position: absolute;
+    bottom: 300px;
+    right: 25px;
+    background: rgba(15, 15, 20, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 3px solid var(--cyan-accent);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 11px;
+    color: #ccc;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 260px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   }
 
-  /* --- Speedometer --- */
+  .telemetry-row { display: flex; justify-content: space-between; align-items: center; }
+  .telemetry-val { font-weight: bold; color: var(--cyan-accent); }
+
   #hud {
     position: absolute;
     bottom: 25px;
@@ -173,9 +166,9 @@
     width: 260px;
     height: 260px;
     border-radius: 50%;
-    border: 4px solid #2a1515;
-    box-shadow: 0 0 35px rgba(230,0,0,0.2), inset 0 0 25px rgba(0,0,0,0.9);
-    background: radial-gradient(circle, #160a0a 0%, #050507 90%);
+    border: 5px solid #222;
+    box-shadow: 0 0 35px rgba(0,0,0,0.9), inset 0 0 30px rgba(0,0,0,0.95);
+    background: radial-gradient(circle, #121215 0%, #050507 90%);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -185,173 +178,45 @@
   }
 
   .rpm-ring {
-    position: absolute;
-    width: 210px;
-    height: 210px;
-    border-radius: 50%;
-    border: 6px solid rgba(255, 255, 255, 0.05);
-    border-top: 6px solid var(--primary-red);
-    border-right: 6px solid var(--primary-red);
-    transform: rotate(-45deg);
-    filter: drop-shadow(0 0 6px var(--primary-red));
+    position: absolute; width: 210px; height: 210px; border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid var(--primary-red);
+    border-right: 4px solid var(--primary-red); transform: rotate(-45deg);
   }
 
   #needle {
-    position: absolute;
-    bottom: 50%;
-    left: calc(50% - 2px);
-    width: 4px;
-    height: 100px;
+    position: absolute; bottom: 50%; left: calc(50% - 2px); width: 4px; height: 100px;
     background: linear-gradient(to top, rgba(230, 0, 0, 0.2), var(--primary-red));
-    transform-origin: bottom center;
-    transform: rotate(-120deg);
-    transition: transform 0.05s linear;
-    border-radius: 2px;
-    box-shadow: 0 0 10px var(--primary-red);
+    transform-origin: bottom center; transform: rotate(-120deg); transition: transform 0.05s linear; border-radius: 2px; box-shadow: 0 0 10px var(--primary-red);
   }
 
-  #needle-center {
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    background: #0d0e12;
-    border: 2px solid var(--primary-red);
-    border-radius: 50%;
-    z-index: 6;
-    box-shadow: 0 0 8px var(--primary-red);
-  }
+  #needle-center { position: absolute; width: 18px; height: 18px; background: #0d0e12; border: 2px solid var(--primary-red); border-radius: 50%; z-index: 6; box-shadow: 0 0 8px var(--primary-red); }
+  .oled-screen { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 4; top: 52%; }
+  #gearDisplay { font-size: 24px; font-weight: 900; color: var(--primary-red); text-shadow: 0 0 8px var(--primary-red); margin-bottom: -4px; }
+  #speedText { font-size: 36px; font-weight: 900; color: #fff; font-family: 'Courier New', Courier, monospace; letter-spacing: -1px; text-shadow: 0 0 10px rgba(255,255,255,0.4); }
+  .unit-text { font-size: 9px; color: #a08888; font-weight: bold; letter-spacing: 2px; margin-top: -4px; }
 
-  .oled-screen {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 4;
-    top: 52%;
-  }
-
-  #gearDisplay {
-    font-size: 24px;
-    font-weight: 900;
-    color: var(--primary-red);
-    text-shadow: 0 0 8px var(--primary-red);
-    margin-bottom: -4px;
-  }
-
-  #speedText {
-    font-size: 36px;
-    font-weight: 900;
-    color: #fff;
-    font-family: 'Courier New', Courier, monospace;
-    letter-spacing: -1px;
-    text-shadow: 0 0 10px rgba(255,255,255,0.4);
-  }
-
-  .unit-text {
-    font-size: 9px;
-    color: #a08888;
-    font-weight: bold;
-    letter-spacing: 2px;
-    margin-top: -4px;
-  }
-
-  .cluster-indicators {
-    position: absolute;
-    bottom: 30px;
-    display: flex;
-    gap: 18px;
-    z-index: 7;
-  }
-
-  .icon-ind {
-    font-size: 13px;
-    opacity: 0.15;
-    transition: opacity 0.2s ease, text-shadow 0.2s ease, color 0.2s ease;
-    color: #fff;
-  }
-
+  .cluster-indicators { position: absolute; bottom: 30px; display: flex; gap: 18px; z-index: 7; }
+  .icon-ind { font-size: 13px; opacity: 0.15; color: #fff; }
   .icon-ind.head-on { opacity: 1; color: #00e676; text-shadow: 0 0 8px #00e676; }
   .icon-ind.rear-on { opacity: 1; color: #ff1744; text-shadow: 0 0 8px #ff1744; }
   .icon-ind.brake-on { opacity: 1; color: #ff9100; text-shadow: 0 0 8px #ff9100; }
 
-  /* Modal */
   .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    z-index: 100;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center;
+    opacity: 0; pointer-events: none; z-index: 100;
   }
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+  .modal-card { background: var(--panel-bg); border: 1px solid var(--primary-red); width: 90%; max-width: 550px; padding: 25px; border-radius: 12px; box-shadow: 0 10px 30px rgba(230,0,0,0.3); }
+  .modal-card h3 { color: var(--primary-red); margin-bottom: 12px; font-size: 22px; }
+  .modal-card p { color: #ccc; line-height: 1.6; font-size: 14px; margin-bottom: 20px; }
+  .close-btn { background: var(--primary-red); color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; float: right; font-weight: bold; }
 
-  .modal-overlay.active {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .modal-card {
-    background: var(--panel-bg);
-    border: 1px solid var(--primary-red);
-    width: 90%;
-    max-width: 550px;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(230,0,0,0.3);
-    transform: translateY(20px);
-    transition: transform 0.3s ease;
-  }
-
-  .modal-overlay.active .modal-card {
-    transform: translateY(0);
-  }
-
-  .modal-card h3 {
-    color: var(--primary-red);
-    margin-bottom: 12px;
-    font-size: 22px;
-  }
-
-  .modal-card p {
-    color: #ccc;
-    line-height: 1.6;
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-
-  .close-btn {
-    background: var(--primary-red);
-    color: white;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    float: right;
-    font-weight: bold;
-  }
-
-  .controls-hint {
-    font-size: 11px;
-    color: #aaa;
-    text-align: left;
-    margin-top: auto;
-    line-height: 1.6;
-    padding-top: 10px;
-    border-top: 1px solid #333;
-  }
+  .controls-hint { font-size: 11px; color: #aaa; text-align: left; margin-top: auto; line-height: 1.6; padding-top: 10px; border-top: 1px solid #333; }
 </style>
 </head>
 <body>
 
-  <!-- Panel Lateral -->
   <div id="sidebar">
     <div class="brand-title">FRANCIENTEC</div>
     
@@ -364,13 +229,34 @@
       <span>👥</span> Sobre Nosotros
     </button>
 
-    <div class="section-label">Personalización</div>
+    <div class="section-label">Personalización Avanzada</div>
     <div class="color-picker-container">
       <label for="carColorPicker" class="nav-btn tech-btn" style="cursor: pointer;">
         <span>Color del Auto</span>
         <input type="color" id="carColorPicker" value="#ffffff" style="cursor: pointer; border: none; background: transparent; width: 28px; height: 28px;">
       </label>
     </div>
+
+    <select id="headlightColorSelect" class="custom-select" onchange="changeHeadlightColor(this.value)">
+      <option value="#ffffff" selected>💡 Faros: Blanco</option>
+      <option value="#ff1744">💡 Faros: Rojo</option>
+      <option value="#00e5ff">💡 Faros: Azul</option>
+      <option value="#fcec03">💡 Faros: Amarillo</option>
+    </select>
+
+    <select id="spoilerSelect" class="custom-select" onchange="changeSpoilerType(this.value)">
+      <option value="stock" selected>🏎️ Alerón: Stock Koenigsegg</option>
+      <option value="gt">🏎️ Alerón: GT Wing Carbono (-Velocidad)</option>
+      <option value="drag">🏎️ Alerón: Drag Spoiler (+Velocidad)</option>
+    </select>
+
+    <button id="trackThemeBtn" class="nav-btn tech-btn" onclick="cycleTrackMode()">
+      <span>☀️</span> Pista: Día
+    </button>
+
+    <button id="xrayBtn" class="nav-btn tech-btn" onclick="toggleXRay()">
+      <span>🔍</span> Modo Rayos X: OFF
+    </button>
 
     <div class="section-label">Sistemas de Ingeniería</div>
     
@@ -395,7 +281,7 @@
     </button>
 
     <div class="section-label">Sobre el Simulador</div>
-    <button class="nav-btn" onclick="openModal('¿Qué implementa?', 'Este simulador ofrece desde una perspectiva técnica y visual una experiencia de conducción, basada en algunos hechos de la realidad de varios vehículos de alto rendimiento en promedio. Implementa una velocidad de 400 km/h, un frenado eficiente que transforma esos 400 km/h a punto de reposo, inspiradas en el Koenigsegg Jesko. Aparte de eso, posee sistemas de luces delanteras y traseras, un freno de mano, indicadores de velocidad y marcha, opciones de customización de color de carrocería, además de un sistema de audio que simula el sonido del motor en tiempo real.')">
+  <button class="nav-btn" onclick="openModal('¿Qué implementa?', 'Este simulador ofrece desde una perspectiva técnica y visual una experiencia de conducción, basada en algunos hechos de la realidad de varios vehículos de alto rendimiento en promedio. Implementa una velocidad de 400 km/h, un frenado eficiente que transforma los 400 km/h a punto de reposo. Aparte de eso, posee sistemas de luminiscencia, un freno de mano, indicadores de velocidad y marcha, opciones de customización de vehiculo, diferentes tipos de pistas para sacarle mayor provecho a cada opción, una opción para poder ver el sistema de transmisión del vehículo, y un sistema de telemetría para visualizar algunos datos en tiempo real, además de un sistema de audio que simula el sonido del motor en tiempo real.')">
       ¿Qué implementa?
     </button>
 
@@ -403,17 +289,35 @@
       🎮 <strong>Controles del vehículo:</strong><br>
       ▲ Acelerar | ▼ Frenar / Reversa<br>
       ◄ Izquierda | ► Derecha<br>
-      <strong>l</strong>: Luces Delanteras y Traseras (ON/OFF)<br>
-      <strong>b</strong>: Freno de Mano
+      <strong>L</strong>: Luces Delanteras y Traseras (ON/OFF)<br>
+      <strong>B</strong>: Freno de Mano<br>
+      <strong>X</strong>: Modo Rayos X (Motor V8 / Ejes)
     </div>
   </div>
 
-  <!-- Contenedor del Juego -->
   <div id="game-container">
     <button id="audioToggle" onclick="toggleAudio()">🔊 Sonido: OFF</button>
     <canvas id="gameCanvas" width="800" height="700"></canvas>
 
-    <!-- HUD -->
+    <div id="telemetryOverlay">
+      <div class="telemetry-row">
+        <span>DOWNFORCE (AERO):</span>
+        <span class="telemetry-val" id="telemetryAero">0 kgf</span>
+      </div>
+      <div class="telemetry-row">
+        <span>AGARRE NEUMÁTICO:</span>
+        <span class="telemetry-val" id="telemetryGrip">100 % (OPTIMO)</span>
+      </div>
+      <div class="telemetry-row">
+        <span>TEMP. FRENOS:</span>
+        <span class="telemetry-val" id="telemetryBrakeTemp">25 °C</span>
+      </div>
+      <div class="telemetry-row">
+        <span>REPARTICIÓN PESO:</span>
+        <span class="telemetry-val" id="telemetryWeight">50/50 %</span>
+      </div>
+    </div>
+
     <div id="hud">
       <div class="rpm-ring"></div>
       <div id="needle"></div>
@@ -433,7 +337,6 @@
     </div>
   </div>
 
-  <!-- Modal -->
   <div class="modal-overlay" id="infoModal">
     <div class="modal-card">
       <h3 id="modalTitle">Título</h3>
@@ -449,24 +352,39 @@ const needle = document.getElementById("needle");
 const speedText = document.getElementById("speedText");
 const gearDisplay = document.getElementById("gearDisplay");
 
-// Iconos HUD
 const iconHead = document.getElementById("iconHead");
 const iconRear = document.getElementById("iconRear");
 const iconBrake = document.getElementById("iconBrake");
 
-// Estado del Vehículo
+const telemetryAero = document.getElementById("telemetryAero");
+const telemetryGrip = document.getElementById("telemetryGrip");
+const telemetryBrakeTemp = document.getElementById("telemetryBrakeTemp");
+const telemetryWeight = document.getElementById("telemetryWeight");
+
+let trackMode = 0; 
+let isXRayMode = false;
+let headlightColor = "#ffffff";
+let spoilerType = "stock";
+
+const baseCarY = 400;
+
 let car = {
   x: 320,
-  y: 520,
+  y: baseCarY,
   width: 160,
   height: 260,
   speed: 0,
   maxSpeed: 400,
   maxReverseSpeed: -50,
-  acceleration: 0.4,
+  acceleration: 0.8,
+  baseFriction: 0.3,
   friction: 0.3,
   handbrakeFriction: 3,
   tilt: 0,
+  suspensionY: 0,
+  suspensionX: 0,
+  brakeTemp: 25,
+  tireGrip: 100,
   headlights: false,
   taillights: false,
   handbrake: false,
@@ -475,45 +393,88 @@ let car = {
 
 let keys = {};
 let roadOffset = 0;
+let particles = [];
+let rainDrops = [];
+let skidmarks = []; // 1. Marcas de neumático
+let backfireTimer = 0; // 5. Llamaradas de escape
+let wasAccelerating = false;
 
-// Escuchar cambios en el selector de color
+let smokeTimer = 0;
+let isAcceleratingFromZero = false;
+
+for (let i = 0; i < 70; i++) {
+  rainDrops.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    length: Math.random() * 20 + 10,
+    speed: Math.random() * 10 + 15
+  });
+}
+
 const colorPicker = document.getElementById("carColorPicker");
-colorPicker.addEventListener("input", (e) => {
-  car.color = e.target.value;
-});
+if (colorPicker) {
+  colorPicker.addEventListener("input", (e) => {
+    car.color = e.target.value;
+  });
+}
 
-// Motor de Audio
-let audioCtx = null;
-let oscMain = null;
-let oscSub = null;
-let filterNode = null;
-let gainNode = null;
-let audioEnabled = false;
+function changeHeadlightColor(color) {
+  headlightColor = color;
+}
+
+function changeSpoilerType(type) {
+  spoilerType = type;
+  // 4. Cambios de física por alerón
+  if (type === "gt") {
+    car.maxSpeed = 385; // Más Downforce, un pelín menos de velocidad tope
+  } else if (type === "drag") {
+    car.maxSpeed = 415; // Menos drag, más velocidad de punta
+  } else {
+    car.maxSpeed = 400;
+  }
+}
+
+function cycleTrackMode() {
+  trackMode = (trackMode + 1) % 3;
+  const btn = document.getElementById("trackThemeBtn");
+  if (trackMode === 0) {
+    btn.innerHTML = "<span>☀️</span> Pista: Día";
+    car.friction = car.baseFriction;
+  } else if (trackMode === 1) {
+    btn.innerHTML = "<span>🌙</span> Pista: Noche";
+    car.friction = car.baseFriction;
+  } else if (trackMode === 2) {
+    btn.innerHTML = "<span>🌧️</span> Pista: Lluvia";
+    car.friction = 0.12;
+  }
+}
+
+function toggleXRay() {
+  isXRayMode = !isXRayMode;
+  document.getElementById("xrayBtn").innerHTML = isXRayMode ? "<span>🔍</span> Modo Rayos X: ON" : "<span>🔍</span> Modo Rayos X: OFF";
+}
+
+let audioCtx = null, oscMain = null, oscSub = null, oscLow = null, filterNode = null, gainNode = null, audioEnabled = false;
 
 function initAudio() {
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
-    oscMain = audioCtx.createOscillator();
-    oscMain.type = 'sawtooth';
+    oscMain = audioCtx.createOscillator(); oscMain.type = 'sawtooth';
+    oscSub = audioCtx.createOscillator(); oscSub.type = 'square';
+    oscLow = audioCtx.createOscillator(); oscLow.type = 'sawtooth';
 
-    oscSub = audioCtx.createOscillator();
-    oscSub.type = 'square';
-
-    filterNode = audioCtx.createBiquadFilter();
-    filterNode.type = 'lowpass';
-    filterNode.frequency.setValueAtTime(350, audioCtx.currentTime);
-
-    gainNode = audioCtx.createGain();
-    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    filterNode = audioCtx.createBiquadFilter(); filterNode.type = 'lowpass';
+    gainNode = audioCtx.createGain(); gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
 
     oscMain.connect(filterNode);
     oscSub.connect(filterNode);
+    oscLow.connect(filterNode);
     filterNode.connect(gainNode);
     gainNode.connect(audioCtx.destination);
 
     oscMain.start();
     oscSub.start();
+    oscLow.start();
   }
 }
 
@@ -532,61 +493,178 @@ function toggleAudio() {
   }
 }
 
+// 8. Sonido de Turbo Blow-Off Valve (pssshh)
+function playBlowOffSound() {
+  if (!audioEnabled || !audioCtx) return;
+  try {
+    let bufferSize = audioCtx.sampleRate * 0.25;
+    let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    let data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    let noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+
+    let filter = audioCtx.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.value = 3200;
+    filter.Q.value = 3;
+
+    let gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+    noise.start();
+  } catch (e) {}
+}
+
 function updateEngineSound() {
   if (!audioEnabled || !audioCtx) return;
-
   let absSpeed = Math.abs(car.speed);
-  let rpmFactor = (absSpeed % 65) / 65; 
-  if (absSpeed === 0) rpmFactor = 0.1;
+  let rpmFactor = (absSpeed % 60) / 60;
+  if (absSpeed === 0) rpmFactor = 0.08;
 
-  let baseFreq = 40 + (rpmFactor * 110) + (absSpeed * 0.15);
-  let filterCutoff = 250 + (rpmFactor * 600) + (absSpeed * 0.8);
-  let volume = (keys["ArrowUp"] || keys["ArrowDown"]) ? 0.18 : 0.04;
+  let baseFreq = 28 + (rpmFactor * 85) + (absSpeed * 0.12);
+  let cutoff = 180 + (rpmFactor * 550) + (absSpeed * 0.6);
+  let volume = (keys["ArrowUp"] || keys["ArrowDown"]) ? 0.22 : 0.06;
 
   oscMain.frequency.setTargetAtTime(baseFreq, audioCtx.currentTime, 0.05);
   oscSub.frequency.setTargetAtTime(baseFreq * 0.5, audioCtx.currentTime, 0.05);
-  filterNode.frequency.setTargetAtTime(filterCutoff, audioCtx.currentTime, 0.05);
+  oscLow.frequency.setTargetAtTime(baseFreq * 0.25, audioCtx.currentTime, 0.05);
+  filterNode.frequency.setTargetAtTime(cutoff, audioCtx.currentTime, 0.05);
   gainNode.gain.setTargetAtTime(volume, audioCtx.currentTime, 0.05);
 }
 
-// Teclado
 document.addEventListener("keydown", (e) => {
   keys[e.key] = true;
-
   if (e.key.toLowerCase() === "l") {
     car.headlights = !car.headlights;
     car.taillights = car.headlights;
+  }
+  if (e.key.toLowerCase() === "x") {
+    toggleXRay();
   }
 });
 
 document.addEventListener("keyup", (e) => {
   keys[e.key] = false;
+  // 8. Activar Blow-off valve y 5. Backfire al soltar acelerador a alto régimen
+  if (e.key === "ArrowUp") {
+    if (Math.abs(car.speed) > 140) {
+      playBlowOffSound();
+      backfireTimer = 12; // Cuadros de explosión de escape
+    }
+  }
 });
 
-// Modales
 function openModal(title, text) {
   document.getElementById("modalTitle").innerText = title;
   document.getElementById("modalBody").innerText = text;
   document.getElementById("infoModal").classList.add("active");
 }
-
 function closeModal() {
   document.getElementById("infoModal").classList.remove("active");
+}
+
+function createSmokeParticle(x, y, isWater = false) {
+  particles.push({
+    x: x,
+    y: y,
+    vx: (Math.random() - 0.5) * 1.5,
+    vy: Math.random() * 2 + 1,
+    size: isWater ? Math.random() * 6 + 4 : Math.random() * 15 + 15,
+    alpha: isWater ? 0.6 : 1,
+    isWater: isWater
+  });
+}
+
+function updateParticles() {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    let p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy + (car.speed * 0.1);
+    p.size += p.isWater ? 0.1 : 0.3;
+    p.alpha -= 0.015;
+    if (p.alpha <= 0) particles.splice(i, 1);
+  }
+}
+
+function drawParticles() {
+  for (let p of particles) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = p.isWater ? `rgba(200, 230, 255, ${p.alpha})` : `rgba(180, 180, 180, ${p.alpha})`;
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+// 1. Marcas de neumáticos en el asfalto (Skidmarks)
+function addSkidmark() {
+  if (Math.abs(car.speed) > 20) {
+    skidmarks.push({
+      x1: car.x + 25,
+      x2: car.x + car.width - 25,
+      y: car.y + car.height - 20,
+      alpha: 0.6
+    });
+  }
+}
+
+function updateAndDrawSkidmarks() {
+  for (let i = skidmarks.length - 1; i >= 0; i--) {
+    let s = skidmarks[i];
+    s.y += car.speed * 0.25; // Se mueven con la carretera
+    s.alpha -= 0.003; // Se desvanecen gradualmente
+    
+    ctx.save();
+    ctx.fillStyle = `rgba(15, 15, 15, ${s.alpha})`;
+    ctx.fillRect(s.x1, s.y, 14, 8);
+    ctx.fillRect(s.x2, s.y, 14, 8);
+    ctx.restore();
+
+    if (s.alpha <= 0 || s.y > canvas.height + 50) {
+      skidmarks.splice(i, 1);
+    }
+  }
 }
 
 function update() {
   car.handbrake = !!keys["b"];
 
-  // Aceleración / Reversa
+  let speedRatio = Math.abs(car.speed) / car.maxSpeed;
+  let targetY = baseCarY - (speedRatio * 110);
+  car.y += (targetY - car.y) * 0.1;
+
   if (keys["ArrowUp"]) {
+    car.suspensionY = 2.5;
+    if (car.speed < 2 && !isAcceleratingFromZero) {
+      isAcceleratingFromZero = true;
+      smokeTimer = 300;
+    }
     car.speed += car.acceleration;
+    if (smokeTimer > 0) {
+      createSmokeParticle(car.x + 35, car.y + car.height - 15);
+      createSmokeParticle(car.x + car.width - 35, car.y + car.height - 15);
+      smokeTimer--;
+    }
   } else if (keys["ArrowDown"]) {
+    car.suspensionY = -4;
     if (car.speed > 0) {
       car.speed -= 0.8;
+      car.brakeTemp += 1.2;
     } else {
       car.speed -= car.acceleration * 0.5;
     }
   } else {
+    car.suspensionY = 0;
+    if (car.speed < 2) isAcceleratingFromZero = false;
+
     if (car.speed > 0) {
       car.speed -= car.friction;
       if (car.speed < 0) car.speed = 0;
@@ -596,8 +674,13 @@ function update() {
     }
   }
 
-  // Freno de mano
   if (car.handbrake) {
+    car.suspensionY = -6;
+    addSkidmark(); // Dejar marcas de caucho
+    if (Math.abs(car.speed) > 0) {
+      car.brakeTemp += 2.5;
+      car.tireGrip -= 0.8;
+    }
     if (car.speed > 0) {
       car.speed -= car.handbrakeFriction;
       if (car.speed < 0) car.speed = 0;
@@ -605,21 +688,37 @@ function update() {
       car.speed += car.handbrakeFriction;
       if (car.speed > 0) car.speed = 0;
     }
+  } else {
+    if (car.tireGrip < 100) car.tireGrip += 0.2;
   }
 
-  // Límites
+  if (trackMode === 2 && Math.abs(car.speed) > 30) {
+    createSmokeParticle(car.x + 30, car.y + car.height - 10, true);
+    createSmokeParticle(car.x + car.width - 30, car.y + car.height - 10, true);
+  }
+
+  car.brakeTemp -= 0.3;
+  if (car.brakeTemp < 25) car.brakeTemp = 25;
+  if (car.brakeTemp > 850) car.brakeTemp = 850;
+
+  if (car.tireGrip < 20) car.tireGrip = 20;
+
+  updateParticles();
+
   if (car.speed > car.maxSpeed) car.speed = car.maxSpeed;
   if (car.speed < car.maxReverseSpeed) car.speed = car.maxReverseSpeed;
 
-  // Dirección
   car.tilt = 0;
+  car.suspensionX = 0;
   if (keys["ArrowLeft"]) {
     car.x -= 2;
-    car.tilt = -0.02;
+    car.tilt = -0.015;
+    car.suspensionX = 3;
   }
   if (keys["ArrowRight"]) {
     car.x += 2.8;
-    car.tilt = 0.05;
+    car.tilt = 0.015;
+    car.suspensionX = -3;
   }
 
   if (car.x < 180) car.x = 180;
@@ -627,17 +726,14 @@ function update() {
 
   roadOffset += car.speed * 0.25;
 
-  // HUD
-  const absSpeed = Math.abs(car.speed);
-  const angle = (absSpeed / car.maxSpeed) * 240 - 120;
-  needle.style.transform = `rotate(${angle}deg)`;
+  let absSpeed = Math.abs(car.speed);
+  needle.style.transform = `rotate(${(absSpeed / car.maxSpeed) * 240 - 120}deg)`;
   speedText.innerText = Math.round(absSpeed);
 
   iconHead.className = car.headlights ? "icon-ind head-on" : "icon-ind";
   iconRear.className = car.taillights ? "icon-ind rear-on" : "icon-ind";
   iconBrake.className = car.handbrake ? "icon-ind brake-on" : "icon-ind";
 
-  // Marchas
   let gear = "N";
   if (car.speed < -1) gear = "R";
   else if (car.speed > 0 && car.speed <= 60) gear = "1";
@@ -647,8 +743,30 @@ function update() {
   else if (car.speed > 260 && car.speed <= 330) gear = "5";
   else if (car.speed > 330 && car.speed <= 400) gear = "6";
   else if (car.speed > 400) gear = "7";
-  
   gearDisplay.innerText = gear;
+
+  // 4. Cálculo de Downforce según Alerón
+  let downforceMultiplier = spoilerType === "gt" ? 1800 : (spoilerType === "drag" ? 1000 : 1400);
+  let downforceKg = Math.round(Math.pow(absSpeed / 400, 2) * downforceMultiplier);
+  telemetryAero.innerText = `${downforceKg} kgf`;
+
+  let gripVal = Math.round(car.tireGrip);
+  if (gripVal > 80) {
+    telemetryGrip.innerText = `${gripVal} % (OPTIMO)`;
+    telemetryGrip.style.color = "#00e5ff";
+  } else if (gripVal > 45) {
+    telemetryGrip.innerText = `${gripVal} % (DESGASTE)`;
+    telemetryGrip.style.color = "#ffb700";
+  } else {
+    telemetryGrip.innerText = `${gripVal} % (PERDIDA AGARRE)`;
+    telemetryGrip.style.color = "#ff1744";
+  }
+
+  telemetryBrakeTemp.innerText = `${Math.round(car.brakeTemp)} °C`;
+  telemetryBrakeTemp.style.color = car.brakeTemp > 400 ? "#ff1744" : "#00e5ff";
+
+  let frontWeight = 50 + Math.round(car.suspensionY * -2.5);
+  telemetryWeight.innerText = `${frontWeight} / ${100 - frontWeight} %`;
 
   updateEngineSound();
 }
@@ -657,58 +775,65 @@ function drawSignPost(ctx, x, y, title, subtitle, isLeft) {
   ctx.save();
   ctx.fillStyle = "#555";
   ctx.fillRect(isLeft ? x + 70 : x - 10, y, 8, 45);
-
   ctx.fillStyle = "#111";
   ctx.strokeStyle = "#e60000";
   ctx.lineWidth = 2;
   ctx.fillRect(x, y - 35, 75, 35);
   ctx.strokeRect(x, y - 35, 75, 35);
-
   ctx.fillStyle = "#fff";
   ctx.font = "bold 9px Arial";
   ctx.textAlign = "center";
   ctx.fillText(title, x + 37, y - 20);
-
   ctx.fillStyle = "#ffb700";
   ctx.font = "bold 8px Arial";
   ctx.fillText(subtitle, x + 37, y - 8);
-
   ctx.restore();
 }
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   ctx.save();
 
-  if (Math.abs(car.speed) > 220) {
-    const shake = (Math.abs(car.speed) / car.maxSpeed) * 2.5;
-    ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
+  let absSpeed = Math.abs(car.speed);
+  if (absSpeed > 280) {
+    const shakeIntensity = ((absSpeed - 280) / (car.maxSpeed - 280)) * 6.5;
+    ctx.translate((Math.random() - 0.5) * shakeIntensity, (Math.random() - 0.5) * shakeIntensity);
   }
 
-  // --- 1. FONDO DE CÉSPED ---
   let grassGrad = ctx.createLinearGradient(0, 0, canvas.width, 0);
-  grassGrad.addColorStop(0, "#081008");
-  grassGrad.addColorStop(0.2, "#102210");
-  grassGrad.addColorStop(0.8, "#102210");
-  grassGrad.addColorStop(1, "#081008");
+  if (trackMode === 1) {
+    grassGrad.addColorStop(0, "#020502");
+    grassGrad.addColorStop(0.5, "#050b05");
+    grassGrad.addColorStop(1, "#020502");
+  } else {
+    grassGrad.addColorStop(0, "#0e1e0e");
+    grassGrad.addColorStop(0.5, "#183318");
+    grassGrad.addColorStop(1, "#0e1e0e");
+  }
   ctx.fillStyle = grassGrad;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // --- 2. PISTA DE ASFALTO OSCURO ---
   let roadGrad = ctx.createLinearGradient(150, 0, 650, 0);
-  roadGrad.addColorStop(0, "#2b2b2b");
-  roadGrad.addColorStop(0.5, "#1f1f1f");
-  roadGrad.addColorStop(1, "#2b2b2b");
+  if (trackMode === 1) {
+    roadGrad.addColorStop(0, "#121212");
+    roadGrad.addColorStop(0.5, "#0a0a0a");
+    roadGrad.addColorStop(1, "#121212");
+  } else if (trackMode === 2) {
+    roadGrad.addColorStop(0, "#222");
+    roadGrad.addColorStop(0.5, "#181818");
+    roadGrad.addColorStop(1, "#222");
+  } else {
+    roadGrad.addColorStop(0, "#3a3a3a");
+    roadGrad.addColorStop(0.5, "#2b2b2b");
+    roadGrad.addColorStop(1, "#3a3a3a");
+  }
   ctx.fillStyle = roadGrad;
   ctx.fillRect(150, 0, 500, canvas.height);
 
-  // Líneas de huella
-  ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
+  ctx.fillStyle = trackMode === 1 ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0.2)";
   ctx.fillRect(230, 0, 70, canvas.height);
   ctx.fillRect(500, 0, 70, canvas.height);
 
-  // --- 3. BORDES / PIANOS 3D ---
   let curbStep = 50;
   let curbOffset = roadOffset % (curbStep * 2);
   if (curbOffset < 0) curbOffset += curbStep * 2;
@@ -716,21 +841,21 @@ function draw() {
   for (let y = -curbStep * 2; y < canvas.height + curbStep * 2; y += curbStep) {
     let drawY = y + curbOffset;
     let isRed = (Math.floor((drawY - curbOffset) / curbStep) % 2 === 0);
-    
-    ctx.fillStyle = isRed ? "#cc0000" : "#dddddd";
+    ctx.fillStyle = isRed ? (trackMode === 1 ? "#800000" : "#cc0000") : (trackMode === 1 ? "#666" : "#dddddd");
     ctx.fillRect(140, drawY, 10, curbStep);
     ctx.fillRect(650, drawY, 10, curbStep);
   }
 
-  // --- 4. LÍNEAS CENTRALES Y LATERALES ---
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+  updateAndDrawSkidmarks(); // 1. Dibujar huellas de frenado
+
+  ctx.strokeStyle = trackMode === 1 ? "rgba(255, 255, 255, 0.2)" : "rgba(255, 255, 255, 0.4)";
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(153, 0); ctx.lineTo(153, canvas.height);
   ctx.moveTo(647, 0); ctx.lineTo(647, canvas.height);
   ctx.stroke();
 
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
+  ctx.strokeStyle = trackMode === 1 ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0.85)";
   ctx.lineWidth = 5;
   ctx.setLineDash([35, 35]);
   ctx.lineDashOffset = -roadOffset;
@@ -740,7 +865,6 @@ function draw() {
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // --- 5. CARTELES DE SEÑALIZACIÓN ---
   let signSpacing = 450;
   let signOffset = roadOffset % signSpacing;
   if (signOffset < 0) signOffset += signSpacing;
@@ -755,25 +879,58 @@ function draw() {
   for (let y = -signSpacing; y < canvas.height + signSpacing; y += signSpacing) {
     let drawY = y + signOffset;
     let data = signsData[signIndex % signsData.length];
-
     drawSignPost(ctx, 40, drawY, data.leftTitle, data.leftSub, true);
     drawSignPost(ctx, 660, drawY, data.rightTitle, data.rightSub, false);
-
     signIndex++;
   }
 
-  car.y = canvas.height - car.height - 40;
+  drawParticles();
 
-  // --- 6. AUTO ---
+  if (trackMode === 2) {
+    ctx.strokeStyle = "rgba(180, 220, 255, 0.4)";
+    ctx.lineWidth = 1.5;
+    for (let drop of rainDrops) {
+      drop.y += drop.speed + absSpeed * 0.1;
+      if (drop.y > canvas.height) drop.y = -20;
+      ctx.beginPath();
+      ctx.moveTo(drop.x, drop.y);
+      ctx.lineTo(drop.x, drop.y + drop.length);
+      ctx.stroke();
+    }
+  }
+
+  // --- RENDERING DEL AUTO CON RETROVISORES Y SOMBRAS ---
   ctx.save();
-  ctx.translate(car.x + car.width / 2, car.y + car.height / 2);
+  ctx.translate(car.x + car.width / 2 + car.suspensionX, car.y + car.height / 2 + car.suspensionY);
   ctx.rotate(car.tilt);
 
-  // Carrocería Base (Color dinámico)
+  let scaleY = 1.0;
+  if (car.suspensionY < 0) scaleY = 0.98;
+  if (car.suspensionY > 0) scaleY = 1.015;
+  ctx.scale(1, scaleY);
+
+  // Sombra proyectada
+  let shadowGrad = ctx.createRadialGradient(0, 15 - car.suspensionY, 10, 0, 15 - car.suspensionY, car.width);
+  shadowGrad.addColorStop(0, "rgba(0, 0, 0, 0.7)");
+  shadowGrad.addColorStop(0.5, "rgba(0, 0, 0, 0.35)");
+  shadowGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+  ctx.fillStyle = shadowGrad;
+  ctx.beginPath();
+  ctx.ellipse(0, 15 - car.suspensionY, car.width / 1.5, car.height / 1.5, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // RETROVISORES LATERALES
+  ctx.fillStyle = car.color;
+  ctx.fillRect(-car.width / 2 - 16, -car.height / 2 + 70, 18, 4); // Izquierdo
+  ctx.fillRect(car.width / 2 - 2, -car.height / 2 + 70, 18, 4);  // Derecho
+  ctx.fillStyle = "#0f0f0f"; // Cristal de espejo
+  ctx.fillRect(-car.width / 2 - 15, -car.height / 2 + 71, 12, 3);
+  ctx.fillRect(car.width / 2 + 2, -car.height / 2 + 71, 12, 3);
+
+  // DIBUJO BASE DEL AUTO
   ctx.fillStyle = car.color;
   ctx.fillRect(-car.width / 2, -car.height / 2, car.width, car.height);
 
-  // Carrocería Delantera
   ctx.fillRect(-car.width + 82, -car.height + 126, 156, 20);
   ctx.fillRect(-car.width + 88, -car.height + 124, 144, 20);
   ctx.fillRect(-car.width + 92, -car.height + 122, 132, 20);
@@ -781,25 +938,37 @@ function draw() {
   ctx.fillRect(-car.width + 104, -car.height + 118, 108, 20);
   ctx.fillRect(-car.width + 110, -car.height + 116, 96, 20);
 
-  // Carrocería Trasera
   ctx.fillRect(-car.width + 86, -car.height + 374, 148, 20);
   ctx.fillRect(-car.width + 90, -car.height + 376, 140, 20);
 
-  // Parabrisas delantero
   ctx.fillStyle = "#0f111c";
-  ctx.fillRect(-car.width + 94, -car.height + 160, 132, 40);
-  ctx.fillRect(-car.width + 96, -car.height + 158, 128, 40);
-  ctx.fillRect(-car.width + 98, -car.height + 156, 124, 40);
-  ctx.fillRect(-car.width + 104, -car.height + 154, 110, 40);
+  ctx.fillRect(-car.width + 120, -car.height + 140, 76, 2);
+  ctx.fillRect(-car.width + 114, -car.height + 142, 10, 2);
+  ctx.fillRect(-car.width + 110, -car.height + 144, 6, 2);
+  ctx.fillRect(-car.width + 108, -car.height + 146, 4, 4);
+  ctx.fillRect(-car.width + 192, -car.height + 142, 10, 2);
+  ctx.fillRect(-car.width + 200, -car.height + 144, 6, 2);
+  ctx.fillRect(-car.width + 204, -car.height + 146, 4, 4);
+  
+  ctx.fillRect(-car.width + 82, -car.height + 160, 10, 16);
+  ctx.fillRect(-car.width + 86, -car.height + 158, 6, 16);
+  ctx.fillRect(-car.width + 82, -car.height + 162, 6, 16);
+  ctx.fillRect(-car.width + 228, -car.height + 160, 10, 16);
+  ctx.fillRect(-car.width + 228, -car.height + 158, 6, 16);
+  ctx.fillRect(-car.width + 232, -car.height + 162, 6, 16);
 
-  // Techo (Color dinámico)
+  ctx.fillStyle = "#0f111c";
+  ctx.fillRect(-car.width + 94, -car.height + 170, 132, 40);
+  ctx.fillRect(-car.width + 96, -car.height + 168, 128, 40);
+  ctx.fillRect(-car.width + 98, -car.height + 166, 124, 40);
+  ctx.fillRect(-car.width + 104, -car.height + 164, 110, 40);
+
   ctx.fillStyle = car.color;
-  ctx.fillRect(-car.width + 94, -car.height + 180, 132, 198);
-  ctx.fillRect(-car.width + 98, -car.height + 176, 124, 198);
-  ctx.fillRect(-car.width + 102, -car.height + 174, 116, 198);
+  ctx.fillRect(-car.width + 94, -car.height + 184, 132, 198);
+  ctx.fillRect(-car.width + 98, -car.height + 180, 124, 198);
+  ctx.fillRect(-car.width + 102, -car.height + 178, 116, 198);
 
-  // Spoiler
-  ctx.fillStyle = "#333";
+  ctx.fillStyle = "#0f0f0f";
   ctx.fillRect(-car.width + 70, -car.height + 366, 180, 18);
   ctx.fillRect(-car.width + 70, -car.height + 364, 60, 18);
   ctx.fillRect(-car.width + 70, -car.height + 362, 40, 18);
@@ -808,56 +977,113 @@ function draw() {
   ctx.fillRect(-car.width + 82, -car.height + 370, 156, 18);
   ctx.fillRect(-car.width + 100, -car.height + 372, 120, 18);
 
-  // Spoiler 2
-  ctx.fillRect(-car.width + 110, -car.height + 300, 20, 80);
-  ctx.fillRect(-car.width + 112, -car.height + 298, 20, 60);
-  ctx.fillRect(-car.width + 113, -car.height + 296, 20, 40);
-  ctx.fillRect(-car.width + 190, -car.height + 300, 20, 80);
-  ctx.fillRect(-car.width + 188, -car.height + 298, 20, 60);
-  ctx.fillRect(-car.width + 187, -car.height + 296, 20, 40);
+  if (spoilerType === "gt") {
+    ctx.fillStyle = "#111115";
+    ctx.fillRect(-car.width / 2 - 12, car.height / 2 - 25, car.width + 24, 14);
+    ctx.fillStyle = car.color;
+    ctx.fillRect(-car.width / 2 - 16, car.height / 2 - 27, 8, 18);
+    ctx.fillRect(car.width / 2 + 8, car.height / 2 - 27, 8, 18);
+  } else if (spoilerType === "drag") {
+    ctx.fillStyle = "#22222b";
+    ctx.fillRect(-car.width / 2 - 20, car.height / 2 - 18, car.width + 40, 22);
+    ctx.fillStyle = "#e60000";
+    ctx.fillRect(-car.width / 2 - 22, car.height / 2 - 20, 6, 26);
+    ctx.fillRect(car.width / 2 + 16, car.height / 2 - 20, 6, 26);
+  } else {
+    ctx.fillRect(-car.width + 110, -car.height + 260, 20, 120);
+    ctx.fillRect(-car.width + 112, -car.height + 258, 20, 100);
+    ctx.fillRect(-car.width + 113, -car.height + 256, 20, 80);
+    ctx.fillRect(-car.width + 190, -car.height + 260, 20, 120);
+    ctx.fillRect(-car.width + 188, -car.height + 258, 20, 100);
+    ctx.fillRect(-car.width + 187, -car.height + 256, 20, 80);
+  }
 
-  // Spoiler 3
-  ctx.fillStyle = "#696969";
+  ctx.fillStyle = car.color;
   ctx.fillRect(-car.width + 68, -car.height + 360, 2, 28);
   ctx.fillRect(-car.width + 250, -car.height + 360, 2, 28);
 
-  // Ventanas laterales
   ctx.fillStyle = "#0f111c";
-  ctx.fillRect(-car.width + 94, -car.height + 190, 4, 86);
-  ctx.fillRect(-car.width + 96, -car.height + 194, 4, 80);
-  ctx.fillRect(-car.width + 220, -car.height + 190, 4, 86);
-  ctx.fillRect(-car.width + 218, -car.height + 194, 4, 80);
+  ctx.fillRect(-car.width + 94, -car.height + 190, 4, 96);
+  ctx.fillRect(-car.width + 96, -car.height + 194, 4, 90);
+  ctx.fillRect(-car.width + 220, -car.height + 190, 4, 96);
+  ctx.fillRect(-car.width + 218, -car.height + 194, 4, 90);
+
+  // SOMBRAS Y PROFUNDIDAD SOBRE LA CARROCERÍA
+  let bodyShadowLeft = ctx.createLinearGradient(-car.width / 2, 0, -car.width / 2 + 30, 0);
+  bodyShadowLeft.addColorStop(0, "rgba(0,0,0,0.4)");
+  bodyShadowLeft.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = bodyShadowLeft;
+  ctx.fillRect(-car.width / 2, -car.height / 2, 30, car.height);
+
+  let bodyShadowRight = ctx.createLinearGradient(car.width / 2, 0, car.width / 2 - 30, 0);
+  bodyShadowRight.addColorStop(0, "rgba(0,0,0,0.4)");
+  bodyShadowRight.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = bodyShadowRight;
+  ctx.fillRect(car.width / 2 - 30, -car.height / 2, 30, car.height);
+
+  let roofHighlight = ctx.createLinearGradient(0, -car.height / 2, 0, car.height / 2);
+  roofHighlight.addColorStop(0, "rgba(255,255,255,0.15)");
+  roofHighlight.addColorStop(0.3, "rgba(0,0,0,0)");
+  roofHighlight.addColorStop(0.7, "rgba(0,0,0,0.1)");
+  roofHighlight.addColorStop(1, "rgba(0,0,0,0.35)");
+  ctx.fillStyle = roofHighlight;
+  ctx.fillRect(-car.width / 2, -car.height / 2, car.width, car.height);
+
+  // MODO RAYOS X
+  if (isXRayMode) {
+    ctx.save();
+    
+    ctx.strokeStyle = "#00e5ff";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(0, -car.height / 2 + 40);
+    ctx.lineTo(0, car.height / 2 - 40);
+    ctx.stroke();
+
+    ctx.fillStyle = "rgba(230, 0, 0, 0.85)";
+    ctx.fillRect(-28, -car.height / 2 + 10, 56, 50);
+    ctx.strokeStyle = "#ffb700";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(-28, -car.height / 2 + 10, 56, 50);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "900 9px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("V8 BI-TURBO", 0, -car.height / 2 + 40);
+
+    ctx.strokeStyle = "#00e5ff";
+    ctx.lineWidth = 3;
+    ctx.beginPath(); 
+    ctx.moveTo(-65, -car.height / 2 + 35); ctx.lineTo(65, -car.height / 2 + 35);
+    ctx.moveTo(-65, car.height / 2 - 40); ctx.lineTo(65, car.height / 2 - 40);
+    ctx.stroke();
+    ctx.restore();
+  }
 
   // Faros Delanteros
   let isHeadlightOn = car.headlights;
-
-  ctx.fillStyle = isHeadlightOn ? "#fcec03" : "#333333";
-  ctx.shadowColor = isHeadlightOn ? "#fcec03" : "transparent";
+  ctx.fillStyle = isHeadlightOn ? headlightColor : "#333333";
+  ctx.shadowColor = isHeadlightOn ? headlightColor : "transparent";
   ctx.shadowBlur = isHeadlightOn ? 15 : 0;
 
-  // Faro Derecho
   ctx.fillRect(-58, -142, 9, 6);
   ctx.fillRect(-74, -140, 16, 6);
   ctx.fillRect(-78, -134, 6, 18);
   ctx.fillRect(-78, -134, 10, 6);
   ctx.fillRect(-80, -132, 4, 26);
 
-  // Faro Izquierdo
   ctx.fillRect(45, -142, 9, 6);
   ctx.fillRect(54, -140, 16, 6);
   ctx.fillRect(72, -134, 6, 18);
   ctx.fillRect(68, -136, 10, 6);
   ctx.fillRect(76, -132, 4, 26);
 
-  // Resetear sombras 
   ctx.shadowBlur = 0;
 
-  // HAZ DE LUZ EN LA CARRETERA
   if (isHeadlightOn) {
     let grad = ctx.createLinearGradient(0, -car.height / 2, 0, -car.height / 2 - 350);
-    grad.addColorStop(0, 'rgba(255, 255, 220, 0.7)');
+    grad.addColorStop(0, headlightColor);
     grad.addColorStop(1, 'rgba(255, 255, 200, 0.0)');
-
     ctx.fillStyle = grad;
     ctx.beginPath();
     ctx.moveTo(-car.width / 2 + 10, -car.height / 2);
@@ -878,7 +1104,17 @@ function draw() {
   ctx.fillRect(-car.width / 2 + 10, car.height / 2 - -2, 30, 6);
   ctx.fillRect(car.width / 2 - 40, car.height / 2 - -2, 30, 6);
 
-  // Reversa
+  // 5. EFECTO DE BACKFIRE (LLAMARADAS DE ESCAPE)
+  if (backfireTimer > 0) {
+    backfireTimer--;
+    ctx.fillStyle = Math.random() > 0.5 ? "#ff3300" : "#00e5ff";
+    ctx.shadowColor = "#ff3300";
+    ctx.shadowBlur = 12;
+    ctx.fillRect(-18, car.height / 2 + 4, 10, Math.random() * 15 + 8);
+    ctx.fillRect(8, car.height / 2 + 4, 10, Math.random() * 15 + 8);
+    ctx.shadowBlur = 0;
+  }
+
   if (car.speed < 0) {
     ctx.fillStyle = "#fc8700";
     ctx.shadowColor = "#fc8700";
@@ -889,16 +1125,17 @@ function draw() {
 
   ctx.restore();
 
-  // Líneas de viento
-  if (Math.abs(car.speed) > 150) {
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+  if (absSpeed > 40) {
+    let lineCount = Math.floor((absSpeed / car.maxSpeed) * 20);
+    let lineLength = 20 + (absSpeed * 0.25);
+    ctx.strokeStyle = trackMode === 1 ? "rgba(255, 255, 255, 0.25)" : "rgba(255, 255, 255, 0.18)";
     ctx.lineWidth = 2;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < lineCount; i++) {
       let lineX = Math.random() * canvas.width;
       let lineY = Math.random() * canvas.height;
       ctx.beginPath();
       ctx.moveTo(lineX, lineY);
-      ctx.lineTo(lineX, lineY + 40);
+      ctx.lineTo(lineX, lineY + lineLength);
       ctx.stroke();
     }
   }
