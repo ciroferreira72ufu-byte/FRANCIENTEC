@@ -14,9 +14,10 @@
     --accent-glow: rgba(230, 0, 0, 0.4);
     --gold-accent: #ffb700;
     --cyan-accent: #00e5ff;
+    --spotify-green: #1ed760;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 
   body {
     background-color: var(--bg-dark);
@@ -88,11 +89,28 @@
     border-color: #444466;
   }
 
+  .nav-btn.gold-btn {
+    background: linear-gradient(135deg, #4d3800 0%, #805d00 100%);
+    border-color: var(--gold-accent);
+    color: #fff;
+  }
+
   .nav-btn:hover { background: var(--primary-red); border-color: #ff4d4d; box-shadow: 0 6px 15px var(--accent-glow); }
   .nav-btn.tech-btn:hover { background: #3b3b5c; border-color: var(--gold-accent); box-shadow: 0 6px 15px rgba(255, 183, 0, 0.2); }
+  .nav-btn.gold-btn:hover { background: var(--gold-accent); color: #000; box-shadow: 0 6px 15px rgba(255, 183, 0, 0.4); }
 
-  .color-picker-container { width: 100%; }
-  .color-picker-container label { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+  .wallet-card {
+    background: #121216;
+    border: 1px solid var(--gold-accent);
+    padding: 10px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    color: var(--gold-accent);
+    font-size: 13px;
+  }
 
   .custom-select {
     width: 100%;
@@ -116,7 +134,27 @@
     background: radial-gradient(circle, #1a1a20 0%, #050507 100%);
   }
 
-  canvas { display: block; background: #4b4b4b; box-shadow: 0 0 30px rgba(169, 0, 0, 0.8); border-radius: 4px; }
+  canvas { display: block; background: #1a1a20; box-shadow: 0 0 30px rgba(169, 0, 0, 0.8); border-radius: 4px; }
+
+  #wheelChangeBar {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    border: 2px solid var(--gold-accent);
+    padding: 12px 24px;
+    border-radius: 12px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 30;
+    box-shadow: 0 0 20px rgba(255,183,0,0.4);
+  }
+  #wheelChangeBar span { font-size: 12px; font-weight: bold; color: var(--gold-accent); letter-spacing: 1px; }
+  .progress-bg { width: 200px; height: 10px; background: #222; border-radius: 5px; overflow: hidden; border: 1px solid #444; }
+  .progress-fill { width: 0%; height: 100%; background: var(--gold-accent); transition: width 0.1s linear; }
 
   #audioToggle {
     position: absolute;
@@ -134,6 +172,145 @@
   }
 
   #audioToggle:hover { border-color: var(--primary-red); color: var(--primary-red); }
+
+  #phoneToggleBtn {
+    position: absolute; bottom: 25px; left: 25px; z-index: 80;
+    background: rgba(20, 20, 25, 0.85); color: white; border: 1px solid rgba(255,255,255,0.2);
+    padding: 10px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 12px;
+    backdrop-filter: blur(8px); box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  }
+  #phoneToggleBtn:hover { border-color: var(--primary-red); color: var(--primary-red); }
+
+  /* ESTRUCTURA IPHONE PRO MAX (SOLO SPOTIFY) */
+  #iphoneContainer {
+    position: absolute; bottom: -680px; right: 30px; width: 320px; height: 630px;
+    background: #121318; border: 4px solid #2c2d35; border-radius: 48px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 0 4px rgba(255,255,255,0.2);
+    z-index: 100; transition: bottom 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.25);
+    display: flex; flex-direction: column; padding: 10px; color: #fff; overflow: hidden;
+    user-select: none;
+  }
+  #iphoneContainer.active { bottom: 20px; }
+
+  .iphone-status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px; font-weight: 600; padding: 2px 8px; z-index: 30;
+  }
+  .dynamic-island {
+    width: 90px; height: 24px; background: #000; border-radius: 20px;
+    display: flex; align-items: center; justify-content: space-between; padding: 0 10px;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden;
+  }
+  .dynamic-island.expanded {
+    width: 170px; height: 28px; background: #08080a; border: 1px solid #333;
+  }
+  .island-text { font-size: 8px; color: #fff; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90px; display: none; }
+  .island-wave { width: 8px; height: 8px; background: var(--spotify-green); border-radius: 50%; display: none; animation: pulse 1s infinite alternate; }
+  @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 1; } }
+
+  .iphone-screen {
+    flex: 1; background: #121212;
+    border-radius: 36px; padding: 0; display: flex; flex-direction: column;
+    justify-content: space-between; position: relative; overflow: hidden;
+  }
+
+  .app-view {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: #121318; border-radius: 36px; padding: 10px;
+    display: none; flex-direction: column; justify-content: space-between; z-index: 20;
+  }
+  .app-view.active { display: flex; }
+
+  /* SPOTIFY REPRODUCTOR COMPACTO */
+  #spotifyApp {
+    background: linear-gradient(180deg, #501c19 0%, #121212 100%);
+    transition: background 0.5s ease;
+    padding: 6px 12px 10px 12px;
+  }
+
+  .sp-drag-handle-wrapper { width: 100%; display: flex; justify-content: center; padding: 4px 0; cursor: pointer; }
+  .sp-drag-handle { width: 38px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 3px; transition: background 0.2s; }
+  .sp-drag-handle-wrapper:hover .sp-drag-handle { background: rgba(255,255,255,0.7); }
+
+  .album-cover-box {
+    width: 190px; height: 190px; background: #222; border-radius: 8px;
+    margin: 4px auto 0 auto; display: flex; justify-content: center; align-items: center;
+    overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+  }
+  .album-cover-box img { width: 100%; height: 100%; object-fit: cover; }
+
+  .sp-track-info { display: flex; justify-content: space-between; align-items: center; margin: 8px 4px 2px 4px; }
+  .sp-title { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+  .sp-artist-row { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #b3b3b3; margin: 1px 4px 0 4px; }
+  .explicit-badge { background: #b3b3b3; color: #000; font-size: 8px; font-weight: bold; padding: 0 3px; border-radius: 2px; }
+
+  .check-circle { width: 20px; height: 20px; background: var(--spotify-green); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #000; }
+  .check-circle svg { width: 11px; height: 11px; fill: #000; }
+
+  .progress-container { width: 100%; padding: 0 4px; margin-top: 6px; }
+  .progress-bar { width: 100%; height: 3px; appearance: none; -webkit-appearance: none; background: rgba(255,255,255,0.2); border-radius: 2px; outline: none; cursor: pointer; }
+  .progress-bar::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 10px; height: 10px; border-radius: 50%; background: #fff; cursor: pointer; }
+  .time-display { display: flex; justify-content: space-between; font-size: 9px; color: #b3b3b3; font-family: monospace; margin-top: 3px; }
+
+  .sp-controls-row { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; margin-top: 4px; }
+  .sp-btn-icon { background: none; border: none; color: #b3b3b3; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .sp-btn-icon svg { width: 20px; height: 20px; fill: currentColor; }
+  .sp-btn-play { width: 44px; height: 44px; background: #fff; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+  .sp-btn-play svg { width: 18px; height: 18px; fill: #000; margin-left: 2px; }
+
+  .sp-bottom-bar { display: flex; justify-content: space-between; align-items: center; padding: 4px 4px 2px 4px; color: #b3b3b3; }
+  .sp-bottom-bar svg { width: 16px; height: 16px; fill: currentColor; }
+  .device-icon { color: var(--spotify-green); font-size: 10px; display: flex; align-items: center; gap: 5px; font-weight: bold; }
+
+  /* VISTA DE PLAYLIST LISTADO */
+  #spotifyPlaylistView {
+    background: #121212; padding: 8px; display: none; flex-direction: column; z-index: 25;
+  }
+  #spotifyPlaylistView.active { display: flex; }
+
+  .pl-top-nav { display: flex; justify-content: space-between; align-items: center; padding: 2px 6px; }
+  .pl-top-nav svg { width: 18px; height: 18px; fill: #fff; cursor: pointer; }
+
+  .pl-tags-row { display: flex; gap: 6px; padding: 6px 2px; overflow-x: auto; }
+  .pl-tag-btn { background: #2a2a2a; color: #fff; border: none; padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; cursor: pointer; white-space: nowrap; }
+
+  .pl-songs-list { 
+    flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; 
+    padding: 6px 2px 85px 2px;
+  }
+  .pl-song-item { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+  .pl-song-left { display: flex; align-items: center; gap: 8px; }
+  .pl-song-thumb { width: 38px; height: 38px; border-radius: 4px; object-fit: cover; }
+  .pl-song-title { font-size: 11px; font-weight: bold; color: #fff; }
+  .pl-song-title.active { color: var(--spotify-green); }
+  .pl-song-artist { font-size: 9px; color: #b3b3b3; display: flex; align-items: center; gap: 4px; }
+
+  /* MINI PLAYER FLOTANTE */
+  .mini-player {
+    position: absolute; bottom: 42px; left: 8px; right: 8px;
+    background: #501c19; border-radius: 8px; padding: 5px 8px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.8); cursor: pointer; z-index: 30;
+  }
+  .mini-player-left { display: flex; align-items: center; gap: 8px; }
+  .mini-player-img { width: 32px; height: 32px; border-radius: 4px; object-fit: cover; }
+  .mini-player-title { font-size: 10px; font-weight: bold; color: #fff; max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mini-player-artist { font-size: 8px; color: #b3b3b3; }
+  .mini-player-right { display: flex; align-items: center; gap: 8px; }
+
+  /* TAB BAR INFERIOR */
+  .pl-tab-bar {
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 40px;
+    background: rgba(18, 18, 18, 0.98); display: flex; justify-content: space-around;
+    align-items: center; border-top: 1px solid #222;
+  }
+  .pl-tab-item { display: flex; flex-direction: column; align-items: center; gap: 1px; color: #b3b3b3; font-size: 8px; cursor: pointer; width: 25%; }
+  .pl-tab-item.active { color: #fff; }
+  .pl-tab-item svg { width: 16px; height: 16px; fill: currentColor; }
+
+  .cheat-container { width: 100%; display: flex; gap: 4px; padding: 8px 4px 4px 4px; background: #000; }
+  .cheat-input { flex: 1; background: #111; border: 1px solid #333; color: var(--gold-accent); font-family: monospace; font-size: 8px; padding: 4px; border-radius: 4px; text-transform: uppercase; }
+  .cheat-btn { background: var(--gold-accent); color: #000; border: none; font-size: 8px; font-weight: bold; padding: 4px 6px; border-radius: 4px; cursor: pointer; }
 
   #telemetryOverlay {
     position: absolute;
@@ -160,35 +337,12 @@
   .telemetry-val { font-weight: bold; color: var(--cyan-accent); }
 
   #hud {
-    position: absolute;
-    bottom: 25px;
-    right: 25px;
-    width: 260px;
-    height: 260px;
-    border-radius: 50%;
-    border: 5px solid #222;
-    box-shadow: 0 0 35px rgba(0,0,0,0.9), inset 0 0 30px rgba(0,0,0,0.95);
-    background: radial-gradient(circle, #121215 0%, #050507 90%);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 5;
-    user-select: none;
+    position: absolute; bottom: 25px; right: 25px; width: 260px; height: 260px; border-radius: 50%;
+    border: 5px solid #222; box-shadow: 0 0 35px rgba(0,0,0,0.9), inset 0 0 30px rgba(0,0,0,0.95);
+    background: radial-gradient(circle, #121215 0%, #050507 90%); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 5; user-select: none;
   }
-
-  .rpm-ring {
-    position: absolute; width: 210px; height: 210px; border-radius: 50%;
-    border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid var(--primary-red);
-    border-right: 4px solid var(--primary-red); transform: rotate(-45deg);
-  }
-
-  #needle {
-    position: absolute; bottom: 50%; left: calc(50% - 2px); width: 4px; height: 100px;
-    background: linear-gradient(to top, rgba(230, 0, 0, 0.2), var(--primary-red));
-    transform-origin: bottom center; transform: rotate(-120deg); transition: transform 0.05s linear; border-radius: 2px; box-shadow: 0 0 10px var(--primary-red);
-  }
-
+  .rpm-ring { position: absolute; width: 210px; height: 210px; border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid var(--primary-red); border-right: 4px solid var(--primary-red); transform: rotate(-45deg); }
+  #needle { position: absolute; bottom: 50%; left: calc(50% - 2px); width: 4px; height: 100px; background: linear-gradient(to top, rgba(230, 0, 0, 0.2), var(--primary-red)); transform-origin: bottom center; transform: rotate(-120deg); transition: transform 0.05s linear; border-radius: 2px; box-shadow: 0 0 10px var(--primary-red); }
   #needle-center { position: absolute; width: 18px; height: 18px; background: #0d0e12; border: 2px solid var(--primary-red); border-radius: 50%; z-index: 6; box-shadow: 0 0 8px var(--primary-red); }
   .oled-screen { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 4; top: 52%; }
   #gearDisplay { font-size: 24px; font-weight: 900; color: var(--primary-red); text-shadow: 0 0 8px var(--primary-red); margin-bottom: -4px; }
@@ -201,16 +355,23 @@
   .icon-ind.rear-on { opacity: 1; color: #ff1744; text-shadow: 0 0 8px #ff1744; }
   .icon-ind.brake-on { opacity: 1; color: #ff9100; text-shadow: 0 0 8px #ff9100; }
 
-  .modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center;
-    opacity: 0; pointer-events: none; z-index: 100;
-  }
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; z-index: 100; }
   .modal-overlay.active { opacity: 1; pointer-events: all; }
-  .modal-card { background: var(--panel-bg); border: 1px solid var(--primary-red); width: 90%; max-width: 550px; padding: 25px; border-radius: 12px; box-shadow: 0 10px 30px rgba(230,0,0,0.3); }
+  .modal-card { background: var(--panel-bg); border: 1px solid var(--primary-red); width: 90%; max-width: 600px; padding: 25px; border-radius: 12px; box-shadow: 0 10px 30px rgba(230,0,0,0.3); max-height: 85vh; overflow-y: auto; }
   .modal-card h3 { color: var(--primary-red); margin-bottom: 12px; font-size: 22px; }
   .modal-card p { color: #ccc; line-height: 1.6; font-size: 14px; margin-bottom: 20px; }
-  .close-btn { background: var(--primary-red); color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; float: right; font-weight: bold; }
+  .close-btn { background: var(--primary-red); color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; float: right; font-weight: bold; margin-top: 15px; }
+
+  .shop-section-title { color: var(--gold-accent); font-size: 13px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 4px; margin: 15px 0 10px 0; }
+  .shop-list-item { background: #121218; border: 1px solid #333; padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .shop-item-info { display: flex; flex-direction: column; gap: 2px; }
+  .shop-item-name { font-weight: bold; font-size: 13px; color: #fff; }
+  .shop-item-desc { font-size: 11px; color: #aaa; }
+  .shop-item-btn { background: var(--gold-accent); color: #000; border: none; padding: 6px 14px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 11px; }
+  .shop-item-btn.equipped { background: #00e676; color: #000; cursor: default; }
+
+  .custom-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
+  .custom-label { font-size: 12px; font-weight: bold; color: #aaa; text-transform: uppercase; }
 
   .controls-hint { font-size: 11px; color: #aaa; text-align: left; margin-top: auto; line-height: 1.6; padding-top: 10px; border-top: 1px solid #333; }
 </style>
@@ -219,7 +380,24 @@
 
   <div id="sidebar">
     <div class="brand-title">FRANCIENTEC</div>
-    
+
+    <div class="wallet-card">
+      <span>💰 CRÉDITOS:</span>
+      <span id="cashDisplay">$0</span>
+    </div>
+
+    <button class="nav-btn gold-btn" onclick="openShopModal()">
+      <span>🛒</span> TIENDA DE MEJORAS
+    </button>
+
+    <button class="nav-btn gold-btn" onclick="openMissionsModal()">
+      <span>🎯</span> PANEL DE MISIONES
+    </button>
+
+    <button class="nav-btn tech-btn" onclick="openCustomModal()">
+      <span>🎨</span> CUSTOMIZAR VEHÍCULO
+    </button>
+
     <div class="section-label">Información General</div>
     <button class="nav-btn" onclick="openModal('Descripción General', 'Este simulador toma como referencia el rendimiento promedio de vehículos de alta gama, evaluando variables clave como velocidad, capacidad de frenado y maniobrabilidad.')">
       <span>🏎️</span> Simulador de Rendimiento
@@ -229,27 +407,13 @@
       <span>👥</span> Sobre Nosotros
     </button>
 
-    <div class="section-label">Personalización Avanzada</div>
-    <div class="color-picker-container">
-      <label for="carColorPicker" class="nav-btn tech-btn" style="cursor: pointer;">
-        <span>Color del Auto</span>
-        <input type="color" id="carColorPicker" value="#ffffff" style="cursor: pointer; border: none; background: transparent; width: 28px; height: 28px;">
-      </label>
-    </div>
-
-    <select id="headlightColorSelect" class="custom-select" onchange="changeHeadlightColor(this.value)">
-      <option value="#ffffff" selected>💡 Faros: Blanco</option>
-      <option value="#ff1744">💡 Faros: Rojo</option>
-      <option value="#00e5ff">💡 Faros: Azul</option>
-      <option value="#fcec03">💡 Faros: Amarillo</option>
+    <div class="section-label">Modo de Conducción</div>
+    <select id="autopilotSelect" class="custom-select" onchange="toggleAutopilot(this.value)">
+      <option value="manual" selected>🎮 Control Manual (Marchas 1-7)</option>
+      <option value="autopilot">🤖 Piloto Automático</option>
     </select>
 
-    <select id="spoilerSelect" class="custom-select" onchange="changeSpoilerType(this.value)">
-      <option value="stock" selected>🏎️ Alerón: Stock Koenigsegg</option>
-      <option value="gt">🏎️ Alerón: GT Wing Carbono (-Velocidad)</option>
-      <option value="drag">🏎️ Alerón: Drag Spoiler (+Velocidad)</option>
-    </select>
-
+    <div class="section-label">Opciones de Pista</div>
     <button id="trackThemeBtn" class="nav-btn tech-btn" onclick="cycleTrackMode()">
       <span>☀️</span> Pista: Día
     </button>
@@ -259,45 +423,151 @@
     </button>
 
     <div class="section-label">Sistemas de Ingeniería</div>
-    
-    <button class="nav-btn tech-btn" onclick="openModal('Motor V8 Bi-turbo', 'Para lograr máxima estabilidad sin añadir peso extra en aceleración pura, los fabricantes suelen apostar por un V8 bi-turbo fabricado en aluminio o titanio. Al ser bloques ligeros y operar con combustibles especiales, rebasan fácilmente los 1.600 CV de potencia sin comprometer el equilibrio del eje posterior.')">
-      Motor promedio
-    </button>
-
-    <button class="nav-btn tech-btn" onclick="openModal('Llantas y neumáticos', 'Las llantas fabricadas en fibra de carbono y aleación de magnesio representan el estándar técnico al reducir significativamente la masa no suspendida, lo que optimiza la aceleración y la respuesta dinámica de la suspensión. Por su parte, los neumáticos utilizan compuestos de caucho de alta tecnología reforzados internamente con aramida y Kevlar. Esta estructura es indispensable para resistir la fuerza centrífuga y la degradación térmica a más de 400 km/h, tolerando toneladas de carga aerodinámica y transmitiendo más de 1.500 CV al asfalto sin deformación ni pérdida de adherencia.')">
-      Llantas y neumáticos Promedio
-    </button>
-
-    <button class="nav-btn tech-btn" onclick="openModal('Suspensión Doble horquilla', 'Consolidada como el estándar de la industria, la suspensión de doble horquilla ofrece un control geométrico total sobre la rueda con un peso mínimo. A diferencia de otros sistemas, mantiene la superficie de contacto del neumático uniforme contra el asfalto, independientemente de la carga aerodinámica aplicada. Al integrarse con amortiguadores horizontales accionados por varillas de titanio (push-rod o pull-rod), elimina las torres de suspensión tradicionales y reduce el centro de gravedad al mínimo, un factor decisivo para preservar la estabilidad direccional por encima de los 400 kilómetros por hora.')">
-      Suspensión promedio
-    </button>
-
-    <button class="nav-btn tech-btn" onclick="openModal('Dihedral Synchro-Helix', 'Mediante un movimiento rotacional de 90 grados en paralelo a la carrocería, este mecanismo combina ligereza y practicidad. Elimina el riesgo de colisión con techos o autos contiguos, despeja el voluminoso umbral del chasis de fibra de carbono y evita la adición de pesados componentes hidráulicos, logrando el equilibrio perfecto entre accesibilidad y rendimiento.')">
-      Puertas con mejor resultado
-    </button>
-
-    <button class="nav-btn tech-btn" onclick="openModal('¿Qué es y para qué sirve?', 'En un vehículo de alto rendimiento, la aerodinámica estudia y encauza el flujo de aire alrededor y por debajo del chasis. A más de 300 km/h, la resistencia aerodinámica actúa como una barrera sólida que, sin una gestión precisa, compromete la tracción y la estabilidad. Mediante el uso de alerones activos y el efecto suelo, el sistema genera la carga aerodinámica (downforce) necesaria para adherir el vehículo al asfalto en curvas, al tiempo que reduce el arrastre en rectas para superar los 400 km/h de manera segura.')">
-      Aerodinámica
-    </button>
-
-    <div class="section-label">Sobre el Simulador</div>
-  <button class="nav-btn" onclick="openModal('¿Qué implementa?', 'Este simulador ofrece desde una perspectiva técnica y visual una experiencia de conducción, basada en algunos hechos de la realidad de varios vehículos de alto rendimiento en promedio. Implementa una velocidad de 400 km/h, un frenado eficiente que transforma los 400 km/h a punto de reposo. Aparte de eso, posee sistemas de luminiscencia, un freno de mano, indicadores de velocidad y marcha, opciones de customización de vehiculo, diferentes tipos de pistas para sacarle mayor provecho a cada opción, una opción para poder ver el sistema de transmisión del vehículo, y un sistema de telemetría para visualizar algunos datos en tiempo real, además de un sistema de audio que simula el sonido del motor en tiempo real.')">
-      ¿Qué implementa?
-    </button>
+    <button class="nav-btn tech-btn" onclick="openModal('Motor V8 Bi-turbo', 'Para lograr máxima estabilidad sin añadir peso extra en aceleración pura, los fabricantes suelen apostar por un V8 bi-turbo fabricado en aluminio o titanio.')">Motor promedio</button>
+    <button class="nav-btn tech-btn" onclick="openModal('Llantas y neumáticos', 'Las llantas fabricadas en fibra de carbono y aleación de magnesio representan el estándar técnico al reducir significativamente la masa no suspendida.')">Llantas y neumáticos Promedio</button>
+    <button class="nav-btn tech-btn" onclick="openModal('Suspensión Doble horquilla', 'Consolidada como el estándar de la industria, la suspensión de doble horquilla ofrece un control geométrico total sobre la rueda con un peso mínimo.')">Suspensión promedio</button>
+    <button class="nav-btn tech-btn" onclick="openModal('Dihedral Synchro-Helix', 'Mediante un movimiento rotacional de 90 grados en paralelo a la carrocería, este mecanismo combina ligereza y practicidad.')">Puertas con mejor resultado</button>
 
     <div class="controls-hint">
       🎮 <strong>Controles del vehículo:</strong><br>
       ▲ Acelerar | ▼ Frenar / Reversa<br>
       ◄ Izquierda | ► Derecha<br>
-      <strong>L</strong>: Luces Delanteras y Traseras (ON/OFF)<br>
-      <strong>B</strong>: Freno de Mano<br>
-      <strong>X</strong>: Modo Rayos X (Motor V8 / Ejes)
+      <strong>1 - 7</strong>: Cambiar Marcha<br>
+      <strong>W (MANTENER 5s a 0 KM/H)</strong>: Cambiar Llantas<br>
+      <strong>L</strong>: Luces | <strong>B</strong>: Freno Mano | <strong>X</strong>: Rayos X | <strong>C</strong>: Celular
     </div>
   </div>
 
   <div id="game-container">
+    <button id="phoneToggleBtn" onclick="togglePhone()">📱 Your phone [C]</button>
     <button id="audioToggle" onclick="toggleAudio()">🔊 Sonido: OFF</button>
+
+    <div id="wheelChangeBar">
+      <span>⚙️ CAMBIANDO LLANTAS... MANTÉN 'W'</span>
+      <div class="progress-bg">
+        <div id="wheelProgressFill" class="progress-fill"></div>
+      </div>
+    </div>
+
     <canvas id="gameCanvas" width="800" height="700"></canvas>
+
+    <!-- IPHONE PRO MAX (SOLO SPOTIFY) -->
+    <div id="iphoneContainer">
+      <div class="iphone-status-bar">
+        <span id="phoneTime">12:00</span>
+        <div class="dynamic-island" id="dynamicIsland">
+          <span class="island-text" id="islandText">Callaita</span>
+          <div class="island-wave" id="islandWave"></div>
+        </div>
+        <span>5G 🔋</span>
+      </div>
+
+      <div class="iphone-screen">
+        <!-- APP SPOTIFY (VISTA FULL PLAYER) -->
+        <div id="spotifyApp" class="app-view active">
+          <div class="sp-drag-handle-wrapper" onclick="showPlaylistView()">
+            <div class="sp-drag-handle"></div>
+          </div>
+
+          <div class="album-cover-box" id="albumCoverBox">
+            <img id="albumCoverImg" src="https://media.pitchfork.com/photos/627425dbc85171592b8a6e6a/master/w_1280%2Cc_limit/Bad-Bunny-Un-Verano-Sin-Ti.jpg" alt="" />
+          </div>
+
+          <div>
+            <div class="sp-track-info">
+              <div class="sp-title" id="trackTitleDisplay">Callaita</div>
+              <div class="check-circle">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              </div>
+            </div>
+            <div class="sp-artist-row">
+              <span class="explicit-badge">E</span>
+              <span id="trackArtistDisplay">Bad Bunny, Tainy</span>
+            </div>
+          </div>
+
+          <audio id="bgMusicPlayer"></audio>
+
+          <div class="progress-container">
+            <input type="range" id="trackSeekBar" class="progress-bar" value="0" min="0" max="100" oninput="seekTrack(this.value)">
+            <div class="time-display">
+              <span id="currentTimeDisplay">0:00</span>
+              <span id="durationDisplay">0:00</span>
+            </div>
+          </div>
+
+          <div class="sp-controls-row">
+            <button class="sp-btn-icon"><svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.45 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg></button>
+            <button class="sp-btn-icon" onclick="prevTrack()"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+            <button class="sp-btn-play" id="playPauseBtn" onclick="togglePlayMusic()">
+              <svg id="playIconSvg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button class="sp-btn-icon" onclick="nextTrack()"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+            <button class="sp-btn-icon"><svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></button>
+          </div>
+
+          <div class="sp-bottom-bar">
+            <div class="device-icon">
+              <svg viewBox="0 0 24 24"><path d="M4 6h16v10H4zM20 18H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2z"/></svg>
+              <span>Your phone</span>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center;">
+              <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.70s-.04-.47-.09-.70l6.96-4.05c.53.49 1.22.79 1.99.79 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.70L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- APP SPOTIFY (VISTA LISTADO DE PLAYLIST) -->
+        <div id="spotifyPlaylistView" class="app-view">
+          <div class="pl-top-nav">
+            <svg viewBox="0 0 24 24" onclick="expandFullPlayer()"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            <div style="width:32px; height:32px; background:var(--spotify-green); border-radius:50%; display:flex; justify-content:center; align-items:center; color:#000;" onclick="togglePlayMusic()">
+              <svg viewBox="0 0 24 24" style="width:16px; height:16px; fill:#000;"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+
+          <div class="pl-tags-row">
+            <button class="pl-tag-btn">+ Agregar</button>
+            <button class="pl-tag-btn">🎛 Mixear</button>
+            <button class="pl-tag-btn">▶ Video</button>
+          </div>
+
+          <div class="pl-songs-list" id="plSongsListContainer"></div>
+
+          <!-- MINI PLAYER FLOTANTE -->
+          <div class="mini-player" id="miniPlayer" onclick="expandFullPlayer()" style="background:#501c19;">
+            <div class="mini-player-left">
+              <img id="miniPlayerImg" class="mini-player-img" src="https://media.pitchfork.com/photos/627425dbc85171592b8a6e6a/master/w_1280%2Cc_limit/Bad-Bunny-Un-Verano-Sin-Ti.jpg" alt="uvst">
+              <div>
+                <div class="mini-player-title" id="miniPlayerTitle">Callaita</div>
+                <div class="mini-player-artist" id="miniPlayerArtist">Bad Bunny, Tainy</div>
+              </div>
+            </div>
+            <div class="mini-player-right" onclick="event.stopPropagation()">
+              <div class="check-circle" style="width:16px; height:16px;">
+                <svg viewBox="0 0 24 24" style="width:9px; height:9px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              </div>
+              <button class="sp-btn-icon" onclick="togglePlayMusic()" style="color:#fff;">
+                <svg id="miniPlayIconSvg" viewBox="0 0 24 24" style="width:18px; height:18px; fill:#fff;"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="pl-tab-bar">
+            <div class="pl-tab-item active"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Inicio</span></div>
+            <div class="pl-tab-item"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>Buscar</span></div>
+            <div class="pl-tab-item"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg><span>Biblioteca</span></div>
+            <div class="pl-tab-item"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg><span>Crear</span></div>
+          </div>
+        </div>
+
+        <div class="cheat-container">
+          <input type="text" id="cheatInput" class="cheat-input" placeholder="CÓDIGO MONEDAS..." />
+          <button class="cheat-btn" onclick="claimCheatCode()">CANJEAR</button>
+        </div>
+      </div>
+    </div>
 
     <div id="telemetryOverlay">
       <div class="telemetry-row">
@@ -337,6 +607,46 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="customModal">
+    <div class="modal-card">
+      <h3>🎨 CUSTOMIZACIÓN DEL VEHÍCULO</h3>
+      
+      <div class="custom-row">
+        <span class="custom-label">Modelo del Auto:</span>
+        <select id="modelSelect" class="custom-select" onchange="changeCarModel(this.value)">
+          <option value="koenigsegg" selected>🏎️ Koenigsegg Supercar</option>
+          <option value="block">📦 Bloque Prototipo (Base Limpia)</option>
+        </select>
+      </div>
+
+      <div class="custom-row">
+        <span class="custom-label">Color de Carrocería:</span>
+        <input type="color" id="carColorPickerModal" value="#ffffff" style="width: 100%; height: 35px; border: none; cursor: pointer; border-radius: 6px;">
+      </div>
+
+      <div class="custom-row">
+        <span class="custom-label">Color de Faros:</span>
+        <select class="custom-select" onchange="changeHeadlightColor(this.value)">
+          <option value="#ffffff" selected>💡 Blanco Xenón</option>
+          <option value="#ff1744">💡 Rojo Neón</option>
+          <option value="#00e5ff">💡 Azul Neón</option>
+          <option value="#fcec03">💡 Amarillo Racing</option>
+        </select>
+      </div>
+
+      <div class="custom-row">
+        <span class="custom-label">Alerón Aerodinámico:</span>
+        <select id="spoilerCustomSelect" class="custom-select" onchange="handleSpoilerCustomChange(this.value)">
+          <option value="stock_sp" selected>Stock Koenigsegg Original</option>
+          <option value="gt_sp">GT Wing Carbono [TIENDA]</option>
+          <option value="drag_sp">Drag High Spoiler [TIENDA]</option>
+        </select>
+      </div>
+
+      <button class="close-btn" onclick="closeCustomModal()">Guardar y Cerrar</button>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="infoModal">
     <div class="modal-card">
       <h3 id="modalTitle">Título</h3>
@@ -345,7 +655,39 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="shopModal">
+    <div class="modal-card">
+      <h3>🛒 TIENDA DE ALTO RENDIMIENTO</h3>
+      <div class="shop-section-title">⚙️ MOTORES (ACELERACIÓN & VELOCIDAD)</div>
+      <div id="engineShopList"></div>
+      <div class="shop-section-title">🏎️ ALERONES AERODINÁMICOS</div>
+      <div id="spoilerShopList"></div>
+      <div class="shop-section-title">🔊 ESCAPES (SONIDO DE MOTOR)</div>
+      <div id="exhaustShopList"></div>
+      <div class="shop-section-title">🛞 COMPUESTOS DE LLANTAS</div>
+      <div id="wheelShopList"></div>
+      <button class="close-btn" onclick="closeShopModal()">Cerrar Tienda</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="missionsModal">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">🎯 CUADRO DE MISIONES Y DESAFÍOS</h3>
+        <span id="missionTimer" style="font-family: monospace; color: var(--cyan-accent); font-weight: bold; font-size: 12px;">RESET: 05:00</span>
+      </div>
+      <p style="font-size: 12px; color: #aaa; margin: 8px 0 15px 0;">Completa misiones para ganar créditos.</p>
+      <div id="modalMissionsContainer"></div>
+      <button class="close-btn" onclick="closeMissionsModal()">Cerrar Misiones</button>
+    </div>
+  </div>
+
 <script>
+// AISLAMIENTO DE EVENTOS DEL CELULAR
+const iphoneElem = document.getElementById("iphoneContainer");
+iphoneElem.addEventListener('wheel', (e) => e.stopPropagation());
+iphoneElem.addEventListener('touchmove', (e) => e.stopPropagation());
+
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const needle = document.getElementById("needle");
@@ -365,6 +707,447 @@ let trackMode = 0;
 let isXRayMode = false;
 let headlightColor = "#ffffff";
 let spoilerType = "stock";
+let selectedModel = "koenigsegg";
+let isAutopilot = false;
+
+let playerCash = 0;
+function updateCashDisplay() { document.getElementById("cashDisplay").innerText = `$${playerCash}`; }
+
+function openCustomModal() { 
+  updateCustomSpoilerDropdown();
+  document.getElementById("customModal").classList.add("active"); 
+}
+function closeCustomModal() { document.getElementById("customModal").classList.remove("active"); }
+function changeCarModel(val) { selectedModel = val; }
+
+const colorPickerModal = document.getElementById("carColorPickerModal");
+if (colorPickerModal) colorPickerModal.addEventListener("input", (e) => car.color = e.target.value);
+
+// SISTEMA DE SPOTIFY COMPLETO
+const bgMusicPlayer = document.getElementById("bgMusicPlayer");
+const trackTitleDisplay = document.getElementById("trackTitleDisplay");
+const trackArtistDisplay = document.getElementById("trackArtistDisplay");
+const trackSeekBar = document.getElementById("trackSeekBar");
+const currentTimeDisplay = document.getElementById("currentTimeDisplay");
+const durationDisplay = document.getElementById("durationDisplay");
+
+const playIconSvg = document.getElementById("playIconSvg");
+const miniPlayIconSvg = document.getElementById("miniPlayIconSvg");
+const spotifyApp = document.getElementById("spotifyApp");
+const spotifyPlaylistView = document.getElementById("spotifyPlaylistView");
+
+const miniPlayer = document.getElementById("miniPlayer");
+const miniPlayerImg = document.getElementById("miniPlayerImg");
+const miniPlayerTitle = document.getElementById("miniPlayerTitle");
+const miniPlayerArtist = document.getElementById("miniPlayerArtist");
+
+const dynamicIsland = document.getElementById("dynamicIsland");
+const islandText = document.getElementById("islandText");
+const islandWave = document.getElementById("islandWave");
+
+let playlist = [
+  { title: "Callaita", artist: "Bad Bunny, Tainy", url: "Callaita.mp3", cover: "https://media.pitchfork.com/photos/627425dbc85171592b8a6e6a/master/w_1280%2Cc_limit/Bad-Bunny-Un-Verano-Sin-Ti.jpg", bg: "#ff0011" },
+  { title: "COMETA HALLEY", artist: "SAIKO, J Balvin", url: "COMETA HALLEY.mp3", cover: "https://www.lahiguera.net/musicalia/artistas/saiko/disco/13476/portada-m.jpg", bg: "#52017d" },
+  { title: "EL MUNDO SE VA A ACABAR", artist: "Omar Courtz", url: "EL MUNDO SE VA A ACABAR.mp3", cover: "https://cdn-images.dzcdn.net/images/cover/4e2b30f91d4eb1ff7a0b20feb9d54cf5/500x500.jpg", bg: "#e872d0" },
+  { title: "Tú no lo Amas", artist: "Anuel AA", url: "Tú no lo Amas.mp3", cover: "https://i.pinimg.com/736x/9a/ea/c9/9aeac90bd6094e2808725aa6782ac81f.jpg", bg: "#025ec7" },
+  { title: "Un Ratito Mas", artist: "Bryant Myers, Bad Bunny", url: "Un Ratito Mas.mp3", cover: "https://i1.sndcdn.com/artworks-000221723300-vnbq51-t500x500.jpg", bg: "#c7b302" },
+  { title: "WYA REMIX RED", artist: "J Abdiel, De La Rose", url: "WYA REMIX RED.mp3", cover: "https://i1.sndcdn.com/artworks-N98DLkh2jrKt-0-t500x500.jpg", bg: "#c71c02" },
+  { title: "La Paso Cabrón", artist: "Trap Capos, Noriel", url: "La Paso Cabrón (feat. Gigolo y La Exce, Falsetto y Sammy, Mike Duran & Baby Angel).mp3", cover: "https://cdn-images.dzcdn.net/images/cover/9c6713908d541f02ac918b2ef1a56f38/0x1900-000000-80-0-0.jpg", bg: "#c71c02" },
+  { title: "Loca (Remix)", artist: "KHEA, Bad Bunny", url: "Loca - Remix.mp3", cover: "https://i1.sndcdn.com/artworks-lQlwpPFLSztO-0-t500x500.jpg", bg: "#e872d0" },
+  { title: "Otra Noche en Miami", artist: "Bad Bunny", url: "Otra Noche en Miami.mp3", cover: "https://upload.wikimedia.org/wikipedia/en/e/e7/X100pre.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original", bg: "#1b3559" },
+  { title: "Salgo Pa' la Calle", artist: "Daddy Yankee", url: "Salgo Pa' la Calle.mp3", cover: "https://cdn-images.dzcdn.net/images/cover/a693d1a26123741547161da7eb562813/1900x1900-000000-80-0-0.jpg", bg: "#c71c02" },
+  { title: "TELEFONO NUEVO", artist: "Bad Bunny, Luar La L", url: "TELEFONO NUEVO.mp3", cover: "https://cdn-images.dzcdn.net/images/cover/f840891b70f6e240b8ecaec49346bd6a/0x1900-000000-80-0-0.jpg", bg: "#fffae0" }
+];
+let currentPlaylistIndex = 0;
+
+function renderPlaylistUI() {
+  const container = document.getElementById("plSongsListContainer");
+  if (!container) return;
+  container.innerHTML = playlist.map((song, index) => {
+    const isPlaying = index === currentPlaylistIndex;
+    return `
+      <div class="pl-song-item" onclick="selectSongFromPlaylist(${index})">
+        <div class="pl-song-left">
+          <img class="pl-song-thumb" src="${song.cover}" alt="" />
+          <div>
+            <div class="pl-song-title ${isPlaying ? 'active' : ''}">${song.title}</div>
+            <div class="pl-song-artist">⬇ E ${song.artist}</div>
+          </div>
+        </div>
+        <div style="color:#b3b3b3;">⋮</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function showPlaylistView() {
+  spotifyApp.classList.remove("active");
+  spotifyPlaylistView.classList.add("active");
+  renderPlaylistUI();
+}
+
+function expandFullPlayer() {
+  spotifyPlaylistView.classList.remove("active");
+  spotifyApp.classList.add("active");
+}
+
+function selectSongFromPlaylist(index) {
+  currentPlaylistIndex = index;
+  playCurrentTrack();
+  renderPlaylistUI();
+}
+
+function updateAlbumCover(coverUrl) {
+  document.getElementById("albumCoverImg").src = coverUrl;
+  miniPlayerImg.src = coverUrl;
+}
+
+function playCurrentTrack() {
+  if (playlist.length > 0) {
+    const track = playlist[currentPlaylistIndex];
+    bgMusicPlayer.src = track.url;
+    trackTitleDisplay.innerText = track.title;
+    trackArtistDisplay.innerText = track.artist;
+    
+    miniPlayerTitle.innerText = track.title;
+    miniPlayerArtist.innerText = track.artist;
+
+    spotifyApp.style.background = `linear-gradient(180deg, ${track.bg} 0%, #121212 100%)`;
+    miniPlayer.style.background = track.bg;
+    updateAlbumCover(track.cover);
+    
+    bgMusicPlayer.play().then(() => {
+      playIconSvg.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
+      miniPlayIconSvg.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
+      dynamicIsland.classList.add("expanded");
+      islandText.innerText = track.title;
+      islandText.style.display = "block";
+      islandWave.style.display = "block";
+    }).catch(() => {});
+  }
+}
+
+function togglePlayMusic() {
+  if (!bgMusicPlayer.src) playCurrentTrack();
+  else if (bgMusicPlayer.paused) {
+    bgMusicPlayer.play();
+    playIconSvg.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
+    miniPlayIconSvg.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
+    dynamicIsland.classList.add("expanded");
+    islandText.style.display = "block"; islandWave.style.display = "block";
+  } else {
+    bgMusicPlayer.pause();
+    playIconSvg.innerHTML = `<path d="M8 5v14l11-7z"/>`;
+    miniPlayIconSvg.innerHTML = `<path d="M8 5v14l11-7z"/>`;
+    dynamicIsland.classList.remove("expanded");
+    islandText.style.display = "none"; islandWave.style.display = "none";
+  }
+}
+
+function nextTrack() {
+  currentPlaylistIndex = (currentPlaylistIndex + 1) % playlist.length;
+  playCurrentTrack();
+  renderPlaylistUI();
+}
+
+function prevTrack() {
+  if (bgMusicPlayer.currentTime > 3) {
+    bgMusicPlayer.currentTime = 0;
+  } else {
+    currentPlaylistIndex = (currentPlaylistIndex - 1 + playlist.length) % playlist.length;
+    playCurrentTrack();
+    renderPlaylistUI();
+  }
+}
+
+bgMusicPlayer.addEventListener("ended", () => { nextTrack(); });
+
+bgMusicPlayer.addEventListener("timeupdate", () => {
+  if (bgMusicPlayer.duration) {
+    trackSeekBar.value = (bgMusicPlayer.currentTime / bgMusicPlayer.duration) * 100;
+    let cMins = Math.floor(bgMusicPlayer.currentTime / 60), cSecs = Math.floor(bgMusicPlayer.currentTime % 60);
+    let dMins = Math.floor(bgMusicPlayer.duration / 60), dSecs = Math.floor(bgMusicPlayer.duration % 60);
+    currentTimeDisplay.innerText = `${cMins}:${cSecs < 10 ? '0' : ''}${cSecs}`;
+    durationDisplay.innerText = `${dMins}:${dSecs < 10 ? '0' : ''}${dSecs}`;
+  }
+});
+
+function seekTrack(val) { if (bgMusicPlayer.duration) bgMusicPlayer.currentTime = (val / 100) * bgMusicPlayer.duration; }
+
+let isPhoneOpen = false;
+function togglePhone() {
+  isPhoneOpen = !isPhoneOpen;
+  document.getElementById("iphoneContainer").classList.toggle("active", isPhoneOpen);
+}
+
+const shopData = {
+  engines: [
+    { id: "v8_stock", name: "V8 Bi-Turbo Stock", desc: "Motor estándar. Aceleración base.", speedBonus: 0, accel: 0.8, price: 0 },
+    { id: "v10_twin", name: "V10 Twin Turbo Spec", desc: "+30 KM/H Max Speed. Aceleración mejorada.", speedBonus: 30, accel: 1.1, price: 300 },
+    { id: "w16_quad", name: "W16 Quad-Turbo Monster", desc: "+80 KM/H Max Speed. Aceleración brutal.", speedBonus: 80, accel: 1.5, price: 800 }
+  ],
+  spoilers: [
+    { id: "stock_sp", name: "Alerón Stock Koenigsegg", desc: "Balance estándar aerodinámico (+0 KM/H).", speedBonus: 0, price: 0 },
+    { id: "gt_sp", name: "GT Wing Carbono", desc: "Máxima carga aerodinámica (-15 KM/H / +Aero).", speedBonus: -15, price: 100 },
+    { id: "drag_sp", name: "Drag Racing Spoiler", desc: "Baja resistencia al aire (+15 KM/H).", speedBonus: 15, price: 250 }
+  ],
+  exhausts: [
+    { id: "stock_ex", name: "Escape Stock OEM", desc: "Sonido equilibrado de fábrica.", price: 0 },
+    { id: "straight_pipe", name: "Straight Pipe Competition", desc: "Sonido agudo estruendoso + Pop & Bangs azules.", price: 150 },
+    { id: "titanium_valved", name: "Titanio Valvetronic Titanium", desc: "Bajos profundos y sonido ronco de competición.", price: 400 }
+  ],
+  wheels: [
+    { id: "stock_w", name: "Llantas OEM Stock", desc: "Compuesto estándar.", wearMult: 1.0, price: 0 },
+    { id: "sport_w", name: "Llantas Sport Performance", desc: "+15% Agarre. 2x más durabilidad.", wearMult: 0.5, price: 200 },
+    { id: "drag_w", name: "Llantas Drag Slicks", desc: "+10 KM/H extra. Agarre óptimo.", wearMult: 0.3, price: 500 }
+  ]
+};
+
+let unlockedEngines = ["v8_stock"];
+let unlockedSpoilers = ["stock_sp"];
+let unlockedExhausts = ["stock_ex"];
+let unlockedWheels = ["stock_w"];
+
+let currentEngine = "v8_stock";
+let currentSpoiler = "stock_sp";
+let currentExhaust = "stock_ex";
+let currentWheel = "stock_w";
+
+function updateCustomSpoilerDropdown() {
+  const select = document.getElementById("spoilerCustomSelect");
+  if (!select) return;
+  select.innerHTML = "";
+  shopData.spoilers.forEach(sp => {
+    let isUnlocked = unlockedSpoilers.includes(sp.id);
+    let isEquipped = currentSpoiler === sp.id;
+    let label = sp.name + (isUnlocked ? "" : " [🔒 COMPRAR EN TIENDA]");
+    let opt = document.createElement("option");
+    opt.value = sp.id;
+    opt.innerText = label;
+    if (isEquipped) opt.selected = true;
+    select.appendChild(opt);
+  });
+}
+
+function handleSpoilerCustomChange(spId) {
+  if (!unlockedSpoilers.includes(spId)) {
+    openModal("Alerón Bloqueado", "Debes comprar este alerón primero en la Tienda de Mejoras para poder equiparlo.");
+    updateCustomSpoilerDropdown();
+    return;
+  }
+  equipSpoiler(spId);
+}
+
+function recalculateMaxSpeed() {
+  let baseSpeed = 400;
+  let engineObj = shopData.engines.find(e => e.id === currentEngine);
+  let spoilerObj = shopData.spoilers.find(s => s.id === currentSpoiler);
+  let wheelBonus = currentWheel === "drag_w" ? 10 : 0;
+
+  car.maxSpeed = baseSpeed + (engineObj ? engineObj.speedBonus : 0) + (spoilerObj ? spoilerObj.speedBonus : 0) + wheelBonus;
+  car.acceleration = engineObj ? engineObj.accel : 0.8;
+}
+
+function openShopModal() {
+  renderShopCategory("engineShopList", shopData.engines, unlockedEngines, currentEngine, "equipEngine");
+  renderShopCategory("spoilerShopList", shopData.spoilers, unlockedSpoilers, currentSpoiler, "equipSpoiler");
+  renderShopCategory("exhaustShopList", shopData.exhausts, unlockedExhausts, currentExhaust, "equipExhaust");
+  renderShopCategory("wheelShopList", shopData.wheels, unlockedWheels, currentWheel, "equipWheel");
+  document.getElementById("shopModal").classList.add("active");
+}
+
+function closeShopModal() {
+  document.getElementById("shopModal").classList.remove("active");
+}
+
+function renderShopCategory(containerId, items, unlockedList, currentEquipped, equipFnName) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+  items.forEach(item => {
+    const isUnlocked = unlockedList.includes(item.id);
+    const isEquipped = currentEquipped === item.id;
+    let btnHtml = isEquipped 
+      ? `<button class="shop-item-btn equipped">EQUIPADO</button>`
+      : (isUnlocked 
+        ? `<button class="shop-item-btn" onclick="${equipFnName}('${item.id}')">EQUIPAR</button>`
+        : `<button class="shop-item-btn" onclick="${equipFnName}('${item.id}')">COMPRAR $${item.price}</button>`);
+
+    container.innerHTML += `
+      <div class="shop-list-item">
+        <div class="shop-item-info">
+          <span class="shop-item-name">${item.name}</span>
+          <span class="shop-item-desc">${item.desc}</span>
+        </div>
+        ${btnHtml}
+      </div>
+    `;
+  });
+}
+
+function equipEngine(id) {
+  const item = shopData.engines.find(e => e.id === id);
+  if (!unlockedEngines.includes(id)) {
+    if (playerCash >= item.price) { playerCash -= item.price; unlockedEngines.push(id); updateCashDisplay(); }
+    else { openModal("Saldo Insuficiente", `Necesitas $${item.price} para este motor.`); return; }
+  }
+  currentEngine = id; recalculateMaxSpeed(); openShopModal();
+}
+
+function equipSpoiler(id) {
+  const item = shopData.spoilers.find(s => s.id === id);
+  if (!unlockedSpoilers.includes(id)) {
+    if (playerCash >= item.price) { playerCash -= item.price; unlockedSpoilers.push(id); updateCashDisplay(); }
+    else { openModal("Saldo Insuficiente", `Necesitas $${item.price} para este alerón.`); return; }
+  }
+  currentSpoiler = id;
+  spoilerType = id === "gt_sp" ? "gt" : (id === "drag_sp" ? "drag" : "stock");
+  recalculateMaxSpeed();
+  if (document.getElementById("shopModal").classList.contains("active")) openShopModal();
+}
+
+function equipExhaust(id) {
+  const item = shopData.exhausts.find(e => e.id === id);
+  if (!unlockedExhausts.includes(id)) {
+    if (playerCash >= item.price) { playerCash -= item.price; unlockedExhausts.push(id); updateCashDisplay(); }
+    else { openModal("Saldo Insuficiente", `Necesitas $${item.price} para este escape.`); return; }
+  }
+  currentExhaust = id; openShopModal();
+}
+
+function equipWheel(id) {
+  const item = shopData.wheels.find(e => e.id === id);
+  if (!unlockedWheels.includes(id)) {
+    if (playerCash >= item.price) { playerCash -= item.price; unlockedWheels.push(id); updateCashDisplay(); }
+    else { openModal("Saldo Insuficiente", `Necesitas $${item.price} para estas llantas.`); return; }
+  }
+  currentWheel = id; recalculateMaxSpeed(); openShopModal();
+}
+
+let missionTimerSeconds = 300;
+let activeMissions = [];
+
+const missionPool = [
+  { text: "Acelera de 0 a 200 KM/H en menos de 6 segundos (+$150)", reward: 150, check: () => car.accelTime <= 6 && car.speed >= 200 },
+  { text: "Llega a 150 KM/H manteniendo la 2ª marcha (+$100)", reward: 100, check: () => currentGear === 2 && Math.abs(car.speed) >= 150 },
+  { text: "Mantén frenada continua por 3 segundos a más de 100 KM/H (+$120)", reward: 120, check: () => car.continuousBrakeTime >= 3 },
+  { text: "Supera los 380 KM/H en marcha 7ª (+$250)", reward: 250, check: () => currentGear === 7 && Math.abs(car.speed) >= 380 },
+  { text: "Supera los 450 KM/H de velocidad absoluta (+$400)", reward: 400, check: () => Math.abs(car.speed) >= 450 }
+];
+
+function generateMissions() {
+  activeMissions = missionPool.sort(() => 0.5 - Math.random()).slice(0, 10).map(m => ({ ...m, done: false }));
+}
+
+function openMissionsModal() {
+  renderMissionsModalList();
+  document.getElementById("missionsModal").classList.add("active");
+}
+
+function closeMissionsModal() {
+  document.getElementById("missionsModal").classList.remove("active");
+}
+
+function renderMissionsModalList() {
+  const container = document.getElementById("modalMissionsContainer");
+  container.innerHTML = "";
+  activeMissions.forEach(m => {
+    container.innerHTML += `
+      <div class="shop-list-item" style="${m.done ? 'opacity: 0.5;' : ''}">
+        <div class="shop-item-info">
+          <span class="shop-item-name" style="${m.done ? 'text-decoration: line-through;' : ''}">${m.text}</span>
+        </div>
+        <button class="shop-item-btn ${m.done ? 'equipped' : ''}">${m.done ? 'COMPLETADA' : 'PENDIENTE'}</button>
+      </div>
+    `;
+  });
+}
+
+function checkActiveMissions() {
+  activeMissions.forEach(m => {
+    if (!m.done && m.check()) {
+      m.done = true; playerCash += m.reward; updateCashDisplay();
+      if (document.getElementById("missionsModal").classList.contains("active")) {
+        renderMissionsModalList();
+      }
+    }
+  });
+}
+
+setInterval(() => {
+  missionTimerSeconds--;
+  if (missionTimerSeconds <= 0) { missionTimerSeconds = 300; generateMissions(); }
+  let mins = Math.floor(missionTimerSeconds / 60);
+  let secs = missionTimerSeconds % 60;
+  document.getElementById("missionTimer").innerText = `RESET: ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+}, 1000);
+
+generateMissions();
+
+const claimedCodes = [];
+function claimCheatCode() {
+  const input = document.getElementById("cheatInput");
+  if(!input) return;
+  const code = input.value.trim().toUpperCase();
+  input.value = "";
+
+  if (claimedCodes.includes(code)) {
+    openModal("Código Ya Usado", "Ya has canjeado este código previamente.");
+    return;
+  }
+
+  if (code === "FRANCIENTEC") {
+    playerCash += 2000; claimedCodes.push(code); updateCashDisplay();
+    openModal("¡Código Canjeado! 🎉", "¡Has recibido $2,000 Créditos!");
+  } else if (code === "NITRO") {
+    playerCash += 1000; claimedCodes.push(code); updateCashDisplay();
+    openModal("¡Código Canjeado! ⚡", "¡Has recibido $1,000 Créditos!");
+  } else if (code === "SPEED") {
+    playerCash += 2500; claimedCodes.push(code); updateCashDisplay();
+    openModal("¡Código Canjeado! 🏎️", "¡Has recibido $2,500 Créditos!");
+  } else if (code === "CIRO") {
+    playerCash += 10000; claimedCodes.push(code); updateCashDisplay();
+    openModal("¡Código Canjeado! 🏎️", "¡Has recibido $10,000 Créditos!");
+  } else {
+    openModal("Código Inválido", "El código ingresado no existe.");
+  } 
+}
+
+let wHoldTimer = 0;
+let isHoldingW = false;
+
+document.addEventListener("keydown", (e) => {
+  if (e.key.toLowerCase() === "w" && !isHoldingW) isHoldingW = true;
+});
+
+document.addEventListener("keyup", (e) => {
+  if (e.key.toLowerCase() === "w") {
+    isHoldingW = false; wHoldTimer = 0;
+    document.getElementById("wheelChangeBar").style.display = "none";
+    document.getElementById("wheelProgressFill").style.width = "0%";
+  }
+});
+
+function handleWheelChangeProcess() {
+  if (isHoldingW && Math.abs(car.speed) < 0.5) {
+    wHoldTimer += 1 / 60;
+    document.getElementById("wheelChangeBar").style.display = "flex";
+    let progress = Math.min((wHoldTimer / 5) * 100, 100);
+    document.getElementById("wheelProgressFill").style.width = `${progress}%`;
+
+    if (wHoldTimer >= 5) {
+      car.tireGrip = 100; car.hasChangedWheels = true; wHoldTimer = 0; isHoldingW = false;
+      document.getElementById("wheelChangeBar").style.display = "none";
+      openModal("🛠️ Llantas Nuevas", "¡Grip reestablecido al 100%!");
+    }
+  }
+}
+
+let currentGear = 1; 
+const gearMaxSpeeds = { 1: 60, 2: 120, 3: 190, 4: 260, 5: 330, 6: 400, 7: 520 };
+
+document.querySelectorAll('select').forEach(s => s.addEventListener('change', function() { this.blur(); }));
+
+function toggleAutopilot(val) { isAutopilot = (val === 'autopilot'); }
 
 const baseCarY = 400;
 
@@ -388,16 +1171,18 @@ let car = {
   headlights: false,
   taillights: false,
   handbrake: false,
-  color: "#ffffff"
+  color: "#ffffff",
+  accelTime: 0,
+  continuousBrakeTime: 0,
+  hasChangedWheels: false
 };
 
 let keys = {};
 let roadOffset = 0;
 let particles = [];
 let rainDrops = [];
-let skidmarks = []; // 1. Marcas de neumático
-let backfireTimer = 0; // 5. Llamaradas de escape
-let wasAccelerating = false;
+let skidmarks = [];
+let backfireTimer = 0;
 
 let smokeTimer = 0;
 let isAcceleratingFromZero = false;
@@ -411,42 +1196,14 @@ for (let i = 0; i < 70; i++) {
   });
 }
 
-const colorPicker = document.getElementById("carColorPicker");
-if (colorPicker) {
-  colorPicker.addEventListener("input", (e) => {
-    car.color = e.target.value;
-  });
-}
-
-function changeHeadlightColor(color) {
-  headlightColor = color;
-}
-
-function changeSpoilerType(type) {
-  spoilerType = type;
-  // 4. Cambios de física por alerón
-  if (type === "gt") {
-    car.maxSpeed = 385; // Más Downforce, un pelín menos de velocidad tope
-  } else if (type === "drag") {
-    car.maxSpeed = 415; // Menos drag, más velocidad de punta
-  } else {
-    car.maxSpeed = 400;
-  }
-}
+function changeHeadlightColor(color) { headlightColor = color; }
 
 function cycleTrackMode() {
   trackMode = (trackMode + 1) % 3;
   const btn = document.getElementById("trackThemeBtn");
-  if (trackMode === 0) {
-    btn.innerHTML = "<span>☀️</span> Pista: Día";
-    car.friction = car.baseFriction;
-  } else if (trackMode === 1) {
-    btn.innerHTML = "<span>🌙</span> Pista: Noche";
-    car.friction = car.baseFriction;
-  } else if (trackMode === 2) {
-    btn.innerHTML = "<span>🌧️</span> Pista: Lluvia";
-    car.friction = 0.12;
-  }
+  if (trackMode === 0) { btn.innerHTML = "<span>☀️</span> Pista: Día"; car.friction = car.baseFriction; }
+  else if (trackMode === 1) { btn.innerHTML = "<span>🌙</span> Pista: Noche"; car.friction = car.baseFriction; }
+  else if (trackMode === 2) { btn.innerHTML = "<span>🌧️</span> Pista: Lluvia"; car.friction = 0.12; }
 }
 
 function toggleXRay() {
@@ -466,15 +1223,10 @@ function initAudio() {
     filterNode = audioCtx.createBiquadFilter(); filterNode.type = 'lowpass';
     gainNode = audioCtx.createGain(); gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
 
-    oscMain.connect(filterNode);
-    oscSub.connect(filterNode);
-    oscLow.connect(filterNode);
-    filterNode.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
+    oscMain.connect(filterNode); oscSub.connect(filterNode); oscLow.connect(filterNode);
+    filterNode.connect(gainNode); gainNode.connect(audioCtx.destination);
 
-    oscMain.start();
-    oscSub.start();
-    oscLow.start();
+    oscMain.start(); oscSub.start(); oscLow.start();
   }
 }
 
@@ -483,41 +1235,34 @@ function toggleAudio() {
   audioEnabled = !audioEnabled;
   const btn = document.getElementById("audioToggle");
   if (audioEnabled) {
-    audioCtx.resume();
-    btn.innerText = "🔊 Sonido: ON";
-    btn.style.borderColor = "#e60000";
+    audioCtx.resume(); btn.innerText = "🔊 Sonido: ON"; btn.style.borderColor = "#e60000";
   } else {
-    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-    btn.innerText = "🔇 Sonido: OFF";
-    btn.style.borderColor = "#555";
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime); btn.innerText = "🔇 Sonido: OFF"; btn.style.borderColor = "#555";
   }
 }
 
-// 8. Sonido de Turbo Blow-Off Valve (pssshh)
 function playBlowOffSound() {
   if (!audioEnabled || !audioCtx) return;
   try {
     let bufferSize = audioCtx.sampleRate * 0.25;
     let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
     let data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = Math.random() * 2 - 1;
-    }
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
     let noise = audioCtx.createBufferSource();
     noise.buffer = buffer;
 
     let filter = audioCtx.createBiquadFilter();
     filter.type = "bandpass";
-    filter.frequency.value = 3200;
-    filter.Q.value = 3;
+    
+    if (currentExhaust === "straight_pipe") { filter.frequency.value = 5500; filter.Q.value = 6; }
+    else if (currentExhaust === "titanium_valved") { filter.frequency.value = 1800; filter.Q.value = 1.5; }
+    else { filter.frequency.value = 3200; filter.Q.value = 3; }
 
     let gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
 
-    noise.connect(filter);
-    filter.connect(gain);
-    gain.connect(audioCtx.destination);
+    noise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
     noise.start();
   } catch (e) {}
 }
@@ -529,8 +1274,11 @@ function updateEngineSound() {
   if (absSpeed === 0) rpmFactor = 0.08;
 
   let baseFreq = 28 + (rpmFactor * 85) + (absSpeed * 0.12);
+  if (currentExhaust === "straight_pipe") baseFreq *= 1.4;
+  else if (currentExhaust === "titanium_valved") baseFreq *= 0.75;
+
   let cutoff = 180 + (rpmFactor * 550) + (absSpeed * 0.6);
-  let volume = (keys["ArrowUp"] || keys["ArrowDown"]) ? 0.22 : 0.06;
+  let volume = (keys["ArrowUp"] || keys["ArrowDown"] || isAutopilot) ? 0.22 : 0.06;
 
   oscMain.frequency.setTargetAtTime(baseFreq, audioCtx.currentTime, 0.05);
   oscSub.frequency.setTargetAtTime(baseFreq * 0.5, audioCtx.currentTime, 0.05);
@@ -540,23 +1288,22 @@ function updateEngineSound() {
 }
 
 document.addEventListener("keydown", (e) => {
+  const activeTag = document.activeElement ? document.activeElement.tagName : "";
+  if (activeTag === "INPUT" || activeTag === "TEXTAREA") return;
+
   keys[e.key] = true;
-  if (e.key.toLowerCase() === "l") {
-    car.headlights = !car.headlights;
-    car.taillights = car.headlights;
-  }
-  if (e.key.toLowerCase() === "x") {
-    toggleXRay();
-  }
+  if (e.key.toLowerCase() === "l") { car.headlights = !car.headlights; car.taillights = car.headlights; }
+  if (e.key.toLowerCase() === "x") toggleXRay();
+  if (e.key.toLowerCase() === "c") togglePhone();
+  if (!isAutopilot && ["1","2","3","4","5","6","7"].includes(e.key)) currentGear = parseInt(e.key);
 });
 
 document.addEventListener("keyup", (e) => {
   keys[e.key] = false;
-  // 8. Activar Blow-off valve y 5. Backfire al soltar acelerador a alto régimen
   if (e.key === "ArrowUp") {
     if (Math.abs(car.speed) > 140) {
       playBlowOffSound();
-      backfireTimer = 12; // Cuadros de explosión de escape
+      backfireTimer = currentExhaust === "straight_pipe" ? 20 : 12;
     }
   }
 });
@@ -566,130 +1313,125 @@ function openModal(title, text) {
   document.getElementById("modalBody").innerText = text;
   document.getElementById("infoModal").classList.add("active");
 }
-function closeModal() {
-  document.getElementById("infoModal").classList.remove("active");
-}
+function closeModal() { document.getElementById("infoModal").classList.remove("active"); }
 
 function createSmokeParticle(x, y, isWater = false) {
   particles.push({
-    x: x,
-    y: y,
-    vx: (Math.random() - 0.5) * 1.5,
-    vy: Math.random() * 2 + 1,
+    x: x, y: y,
+    vx: (Math.random() - 0.5) * 1.5, vy: Math.random() * 2 + 1,
     size: isWater ? Math.random() * 6 + 4 : Math.random() * 15 + 15,
-    alpha: isWater ? 0.6 : 1,
-    isWater: isWater
+    alpha: isWater ? 0.6 : 1, isWater: isWater
   });
 }
 
 function updateParticles() {
   for (let i = particles.length - 1; i >= 0; i--) {
     let p = particles[i];
-    p.x += p.vx;
-    p.y += p.vy + (car.speed * 0.1);
-    p.size += p.isWater ? 0.1 : 0.3;
-    p.alpha -= 0.015;
+    p.x += p.vx; p.y += p.vy + (car.speed * 0.1);
+    p.size += p.isWater ? 0.1 : 0.3; p.alpha -= 0.015;
     if (p.alpha <= 0) particles.splice(i, 1);
   }
 }
 
 function drawParticles() {
   for (let p of particles) {
-    ctx.save();
-    ctx.beginPath();
+    ctx.save(); ctx.beginPath();
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     ctx.fillStyle = p.isWater ? `rgba(200, 230, 255, ${p.alpha})` : `rgba(180, 180, 180, ${p.alpha})`;
-    ctx.fill();
-    ctx.restore();
+    ctx.fill(); ctx.restore();
   }
 }
 
-// 1. Marcas de neumáticos en el asfalto (Skidmarks)
 function addSkidmark() {
   if (Math.abs(car.speed) > 20) {
-    skidmarks.push({
-      x1: car.x + 25,
-      x2: car.x + car.width - 25,
-      y: car.y + car.height - 20,
-      alpha: 0.6
-    });
+    skidmarks.push({ x1: car.x + 25, x2: car.x + car.width - 25, y: car.y + car.height - 20, alpha: 0.6 });
   }
 }
 
 function updateAndDrawSkidmarks() {
   for (let i = skidmarks.length - 1; i >= 0; i--) {
     let s = skidmarks[i];
-    s.y += car.speed * 0.25; // Se mueven con la carretera
-    s.alpha -= 0.003; // Se desvanecen gradualmente
-    
-    ctx.save();
-    ctx.fillStyle = `rgba(15, 15, 15, ${s.alpha})`;
-    ctx.fillRect(s.x1, s.y, 14, 8);
-    ctx.fillRect(s.x2, s.y, 14, 8);
+    s.y += car.speed * 0.25; s.alpha -= 0.003;
+    ctx.save(); ctx.fillStyle = `rgba(15, 15, 15, ${s.alpha})`;
+    ctx.fillRect(s.x1, s.y, 14, 8); ctx.fillRect(s.x2, s.y, 14, 8);
     ctx.restore();
-
-    if (s.alpha <= 0 || s.y > canvas.height + 50) {
-      skidmarks.splice(i, 1);
-    }
+    if (s.alpha <= 0 || s.y > canvas.height + 50) skidmarks.splice(i, 1);
   }
 }
 
+function updatePhoneTime() {
+  const now = new Date();
+  document.getElementById("phoneTime").innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+}
+
 function update() {
-  car.handbrake = !!keys["b"];
+  checkActiveMissions();
+  updatePhoneTime();
+  handleWheelChangeProcess();
+
+  let wheelObj = shopData.wheels.find(w => w.id === currentWheel);
+  let wearRate = 0.01 * (wheelObj ? wheelObj.wearMult : 1.0);
+
+  if (Math.abs(car.speed) > 10) {
+    car.tireGrip -= wearRate;
+    if (car.tireGrip < 0) car.tireGrip = 0;
+  }
+
+  if (car.tireGrip < 10 && car.tireGrip > 0 && Math.abs(car.speed) > 20) {
+    car.x += (Math.random() - 0.5) * 8;
+  }
+
+  if (keys["ArrowUp"] && car.speed < 200) car.accelTime += 1/60;
+  else if (car.speed === 0) car.accelTime = 0;
+
+  if (keys["ArrowDown"] && car.speed > 50) car.continuousBrakeTime += 1/60;
+  else car.continuousBrakeTime = 0;
+
+  if (isAutopilot && car.tireGrip > 0) {
+    car.headlights = true; car.taillights = true;
+    if (car.speed < 240) car.speed += car.acceleration * 0.5;
+    else if (car.speed > 240) car.speed -= 0.5;
+    let centerLane = 400 - car.width / 2;
+    if (car.x < centerLane) car.x += 1; if (car.x > centerLane) car.x -= 1;
+  }
+
+  car.handbrake = !isAutopilot && !!keys["b"];
 
   let speedRatio = Math.abs(car.speed) / car.maxSpeed;
   let targetY = baseCarY - (speedRatio * 110);
   car.y += (targetY - car.y) * 0.1;
 
-  if (keys["ArrowUp"]) {
-    car.suspensionY = 2.5;
-    if (car.speed < 2 && !isAcceleratingFromZero) {
-      isAcceleratingFromZero = true;
-      smokeTimer = 300;
-    }
-    car.speed += car.acceleration;
-    if (smokeTimer > 0) {
-      createSmokeParticle(car.x + 35, car.y + car.height - 15);
-      createSmokeParticle(car.x + car.width - 35, car.y + car.height - 15);
-      smokeTimer--;
-    }
-  } else if (keys["ArrowDown"]) {
-    car.suspensionY = -4;
-    if (car.speed > 0) {
-      car.speed -= 0.8;
-      car.brakeTemp += 1.2;
-    } else {
-      car.speed -= car.acceleration * 0.5;
-    }
-  } else {
-    car.suspensionY = 0;
-    if (car.speed < 2) isAcceleratingFromZero = false;
+  if (!isAutopilot) {
+    let currentGearMax = gearMaxSpeeds[currentGear] || car.maxSpeed;
 
-    if (car.speed > 0) {
-      car.speed -= car.friction;
-      if (car.speed < 0) car.speed = 0;
-    } else if (car.speed < 0) {
-      car.speed += car.friction;
-      if (car.speed > 0) car.speed = 0;
+    if (keys["ArrowUp"] && car.tireGrip > 0) {
+      car.suspensionY = 2.5;
+      if (car.speed < 2 && !isAcceleratingFromZero) { isAcceleratingFromZero = true; smokeTimer = 300; }
+      if (car.speed < currentGearMax) car.speed += car.acceleration;
+      else car.speed = currentGearMax;
+
+      if (smokeTimer > 0) {
+        createSmokeParticle(car.x + 35, car.y + car.height - 15);
+        createSmokeParticle(car.x + car.width - 35, car.y + car.height - 15);
+        smokeTimer--;
+      }
+    } else if (keys["ArrowDown"]) {
+      car.suspensionY = -4;
+      if (car.speed > 0) { car.speed -= 0.8; car.brakeTemp += 1.2; }
+      else car.speed -= car.acceleration * 0.5;
+    } else {
+      car.suspensionY = 0;
+      if (car.speed < 2) isAcceleratingFromZero = false;
+      if (car.speed > 0) { car.speed -= car.friction; if (car.speed < 0) car.speed = 0; }
+      else if (car.speed < 0) { car.speed += car.friction; if (car.speed > 0) car.speed = 0; }
     }
   }
 
   if (car.handbrake) {
-    car.suspensionY = -6;
-    addSkidmark(); // Dejar marcas de caucho
-    if (Math.abs(car.speed) > 0) {
-      car.brakeTemp += 2.5;
-      car.tireGrip -= 0.8;
-    }
-    if (car.speed > 0) {
-      car.speed -= car.handbrakeFriction;
-      if (car.speed < 0) car.speed = 0;
-    } else if (car.speed < 0) {
-      car.speed += car.handbrakeFriction;
-      if (car.speed > 0) car.speed = 0;
-    }
-  } else {
-    if (car.tireGrip < 100) car.tireGrip += 0.2;
+    car.suspensionY = -6; addSkidmark();
+    if (Math.abs(car.speed) > 0) { car.brakeTemp += 2.5; car.tireGrip -= 0.4; }
+    if (car.speed > 0) { car.speed -= car.handbrakeFriction; if (car.speed < 0) car.speed = 0; }
+    else if (car.speed < 0) { car.speed += car.handbrakeFriction; if (car.speed > 0) car.speed = 0; }
   }
 
   if (trackMode === 2 && Math.abs(car.speed) > 30) {
@@ -701,24 +1443,17 @@ function update() {
   if (car.brakeTemp < 25) car.brakeTemp = 25;
   if (car.brakeTemp > 850) car.brakeTemp = 850;
 
-  if (car.tireGrip < 20) car.tireGrip = 20;
-
   updateParticles();
 
   if (car.speed > car.maxSpeed) car.speed = car.maxSpeed;
   if (car.speed < car.maxReverseSpeed) car.speed = car.maxReverseSpeed;
 
-  car.tilt = 0;
-  car.suspensionX = 0;
-  if (keys["ArrowLeft"]) {
-    car.x -= 2;
-    car.tilt = -0.015;
-    car.suspensionX = 3;
-  }
-  if (keys["ArrowRight"]) {
-    car.x += 2.8;
-    car.tilt = 0.015;
-    car.suspensionX = -3;
+  if (!isAutopilot) {
+    car.tilt = 0; car.suspensionX = 0;
+    if (Math.abs(car.speed) > 0.5) {
+      if (keys["ArrowLeft"]) { car.x -= 2; car.tilt = -0.015; car.suspensionX = 3; }
+      if (keys["ArrowRight"]) { car.x += 2.8; car.tilt = 0.015; car.suspensionX = -3; }
+    }
   }
 
   if (car.x < 180) car.x = 180;
@@ -734,33 +1469,15 @@ function update() {
   iconRear.className = car.taillights ? "icon-ind rear-on" : "icon-ind";
   iconBrake.className = car.handbrake ? "icon-ind brake-on" : "icon-ind";
 
-  let gear = "N";
-  if (car.speed < -1) gear = "R";
-  else if (car.speed > 0 && car.speed <= 60) gear = "1";
-  else if (car.speed > 60 && car.speed <= 120) gear = "2";
-  else if (car.speed > 120 && car.speed <= 190) gear = "3";
-  else if (car.speed > 190 && car.speed <= 260) gear = "4";
-  else if (car.speed > 260 && car.speed <= 330) gear = "5";
-  else if (car.speed > 330 && car.speed <= 400) gear = "6";
-  else if (car.speed > 400) gear = "7";
-  gearDisplay.innerText = gear;
-
-  // 4. Cálculo de Downforce según Alerón
+  gearDisplay.innerText = car.speed < -1 ? "R" : (isAutopilot ? "A" : currentGear.toString());
+  
   let downforceMultiplier = spoilerType === "gt" ? 1800 : (spoilerType === "drag" ? 1000 : 1400);
-  let downforceKg = Math.round(Math.pow(absSpeed / 400, 2) * downforceMultiplier);
-  telemetryAero.innerText = `${downforceKg} kgf`;
+  telemetryAero.innerText = `${Math.round(Math.pow(absSpeed / 400, 2) * downforceMultiplier)} kgf`;
 
   let gripVal = Math.round(car.tireGrip);
-  if (gripVal > 80) {
-    telemetryGrip.innerText = `${gripVal} % (OPTIMO)`;
-    telemetryGrip.style.color = "#00e5ff";
-  } else if (gripVal > 45) {
-    telemetryGrip.innerText = `${gripVal} % (DESGASTE)`;
-    telemetryGrip.style.color = "#ffb700";
-  } else {
-    telemetryGrip.innerText = `${gripVal} % (PERDIDA AGARRE)`;
-    telemetryGrip.style.color = "#ff1744";
-  }
+  if (gripVal > 25) { telemetryGrip.innerText = `${gripVal} % (ÓPTIMO)`; telemetryGrip.style.color = "#00e5ff"; }
+  else if (gripVal > 0) { telemetryGrip.innerText = `${gripVal} % (DESCONTROL)`; telemetryGrip.style.color = "#ffb700"; }
+  else { telemetryGrip.innerText = `0 % (DESHABILITADO - MANTÉN 'W')`; telemetryGrip.style.color = "#ff1744"; }
 
   telemetryBrakeTemp.innerText = `${Math.round(car.brakeTemp)} °C`;
   telemetryBrakeTemp.style.color = car.brakeTemp > 400 ? "#ff1744" : "#00e5ff";
@@ -772,22 +1489,13 @@ function update() {
 }
 
 function drawSignPost(ctx, x, y, title, subtitle, isLeft) {
-  ctx.save();
-  ctx.fillStyle = "#555";
+  ctx.save(); ctx.fillStyle = "#555";
   ctx.fillRect(isLeft ? x + 70 : x - 10, y, 8, 45);
-  ctx.fillStyle = "#111";
-  ctx.strokeStyle = "#e60000";
-  ctx.lineWidth = 2;
-  ctx.fillRect(x, y - 35, 75, 35);
-  ctx.strokeRect(x, y - 35, 75, 35);
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 9px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText(title, x + 37, y - 20);
-  ctx.fillStyle = "#ffb700";
-  ctx.font = "bold 8px Arial";
-  ctx.fillText(subtitle, x + 37, y - 8);
-  ctx.restore();
+  ctx.fillStyle = "#111"; ctx.strokeStyle = "#e60000"; ctx.lineWidth = 2;
+  ctx.fillRect(x, y - 35, 75, 35); ctx.strokeRect(x, y - 35, 75, 35);
+  ctx.fillStyle = "#fff"; ctx.font = "bold 9px Arial"; ctx.textAlign = "center";
+  ctx.fillText(title, x + 37, y - 20); ctx.fillStyle = "#ffb700"; ctx.font = "bold 8px Arial";
+  ctx.fillText(subtitle, x + 37, y - 8); ctx.restore();
 }
 
 function draw() {
@@ -796,44 +1504,24 @@ function draw() {
 
   let absSpeed = Math.abs(car.speed);
   if (absSpeed > 280) {
-    const shakeIntensity = ((absSpeed - 280) / (car.maxSpeed - 280)) * 6.5;
-    ctx.translate((Math.random() - 0.5) * shakeIntensity, (Math.random() - 0.5) * shakeIntensity);
+    const shake = ((absSpeed - 280) / (car.maxSpeed - 280)) * 6.5;
+    ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
   }
 
-  let grassGrad = ctx.createLinearGradient(0, 0, canvas.width, 0);
-  if (trackMode === 1) {
-    grassGrad.addColorStop(0, "#020502");
-    grassGrad.addColorStop(0.5, "#050b05");
-    grassGrad.addColorStop(1, "#020502");
-  } else {
-    grassGrad.addColorStop(0, "#0e1e0e");
-    grassGrad.addColorStop(0.5, "#183318");
-    grassGrad.addColorStop(1, "#0e1e0e");
-  }
-  ctx.fillStyle = grassGrad;
+  // Fondo
+  ctx.fillStyle = trackMode === 1 ? "#050b05" : "#183318";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  let roadGrad = ctx.createLinearGradient(150, 0, 650, 0);
-  if (trackMode === 1) {
-    roadGrad.addColorStop(0, "#121212");
-    roadGrad.addColorStop(0.5, "#0a0a0a");
-    roadGrad.addColorStop(1, "#121212");
-  } else if (trackMode === 2) {
-    roadGrad.addColorStop(0, "#222");
-    roadGrad.addColorStop(0.5, "#181818");
-    roadGrad.addColorStop(1, "#222");
-  } else {
-    roadGrad.addColorStop(0, "#3a3a3a");
-    roadGrad.addColorStop(0.5, "#2b2b2b");
-    roadGrad.addColorStop(1, "#3a3a3a");
-  }
-  ctx.fillStyle = roadGrad;
+  // Asfalto
+  ctx.fillStyle = trackMode === 1 ? "#0a0a0a" : (trackMode === 2 ? "#181818" : "#2b2b2b");
   ctx.fillRect(150, 0, 500, canvas.height);
 
-  ctx.fillStyle = trackMode === 1 ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0.2)";
+  // Carriles oscuros
+  ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
   ctx.fillRect(230, 0, 70, canvas.height);
   ctx.fillRect(500, 0, 70, canvas.height);
 
+  // Cordones
   let curbStep = 50;
   let curbOffset = roadOffset % (curbStep * 2);
   if (curbOffset < 0) curbOffset += curbStep * 2;
@@ -841,21 +1529,23 @@ function draw() {
   for (let y = -curbStep * 2; y < canvas.height + curbStep * 2; y += curbStep) {
     let drawY = y + curbOffset;
     let isRed = (Math.floor((drawY - curbOffset) / curbStep) % 2 === 0);
-    ctx.fillStyle = isRed ? (trackMode === 1 ? "#800000" : "#cc0000") : (trackMode === 1 ? "#666" : "#dddddd");
+    ctx.fillStyle = isRed ? "#cc0000" : "#dddddd";
     ctx.fillRect(140, drawY, 10, curbStep);
     ctx.fillRect(650, drawY, 10, curbStep);
   }
 
-  updateAndDrawSkidmarks(); // 1. Dibujar huellas de frenado
+  updateAndDrawSkidmarks();
 
-  ctx.strokeStyle = trackMode === 1 ? "rgba(255, 255, 255, 0.2)" : "rgba(255, 255, 255, 0.4)";
+  // Líneas laterales
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(153, 0); ctx.lineTo(153, canvas.height);
   ctx.moveTo(647, 0); ctx.lineTo(647, canvas.height);
   ctx.stroke();
 
-  ctx.strokeStyle = trackMode === 1 ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0.85)";
+  // Línea punteada central
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
   ctx.lineWidth = 5;
   ctx.setLineDash([35, 35]);
   ctx.lineDashOffset = -roadOffset;
@@ -865,6 +1555,7 @@ function draw() {
   ctx.stroke();
   ctx.setLineDash([]);
 
+  // Carteles
   let signSpacing = 450;
   let signOffset = roadOffset % signSpacing;
   if (signOffset < 0) signOffset += signSpacing;
@@ -886,20 +1577,18 @@ function draw() {
 
   drawParticles();
 
+  // Lluvia
   if (trackMode === 2) {
     ctx.strokeStyle = "rgba(180, 220, 255, 0.4)";
     ctx.lineWidth = 1.5;
     for (let drop of rainDrops) {
       drop.y += drop.speed + absSpeed * 0.1;
       if (drop.y > canvas.height) drop.y = -20;
-      ctx.beginPath();
-      ctx.moveTo(drop.x, drop.y);
-      ctx.lineTo(drop.x, drop.y + drop.length);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(drop.x, drop.y); ctx.lineTo(drop.x, drop.y + drop.length); ctx.stroke();
     }
   }
 
-  // --- RENDERING DEL AUTO CON RETROVISORES Y SOMBRAS ---
+  // DIBUJO DEL AUTO
   ctx.save();
   ctx.translate(car.x + car.width / 2 + car.suspensionX, car.y + car.height / 2 + car.suspensionY);
   ctx.rotate(car.tilt);
@@ -909,74 +1598,188 @@ function draw() {
   if (car.suspensionY > 0) scaleY = 1.015;
   ctx.scale(1, scaleY);
 
-  // Sombra proyectada
-  let shadowGrad = ctx.createRadialGradient(0, 15 - car.suspensionY, 10, 0, 15 - car.suspensionY, car.width);
-  shadowGrad.addColorStop(0, "rgba(0, 0, 0, 0.7)");
-  shadowGrad.addColorStop(0.5, "rgba(0, 0, 0, 0.35)");
-  shadowGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
-  ctx.fillStyle = shadowGrad;
-  ctx.beginPath();
-  ctx.ellipse(0, 15 - car.suspensionY, car.width / 1.5, car.height / 1.5, 0, 0, Math.PI * 2);
-  ctx.fill();
+  let isHeadlightOn = car.headlights;
+  let isBraking = !isAutopilot && keys["ArrowDown"] && car.speed > 0;
+  let isTaillightOn = car.taillights || isBraking || car.handbrake;
 
-  // RETROVISORES LATERALES
-  ctx.fillStyle = car.color;
-  ctx.fillRect(-car.width / 2 - 16, -car.height / 2 + 70, 18, 4); // Izquierdo
-  ctx.fillRect(car.width / 2 - 2, -car.height / 2 + 70, 18, 4);  // Derecho
-  ctx.fillStyle = "#0f0f0f"; // Cristal de espejo
-  ctx.fillRect(-car.width / 2 - 15, -car.height / 2 + 71, 12, 3);
-  ctx.fillRect(car.width / 2 + 2, -car.height / 2 + 71, 12, 3);
+  if (selectedModel === "block") {
+    // BLOQUE PROTOTIPO LIMPIO
+    ctx.fillStyle = "#171717";
+    ctx.fillRect(-car.width / 2, -car.height / 2, car.width, car.height);
+    ctx.fillRect(-76, -132, 152, 10);
+    ctx.fillRect(-70, -134, 140, 10);
+    ctx.fillRect(-64, -136, 128, 10);
+    ctx.fillRect(-58, -138, 116, 10);
+    ctx.fillRect(-52, -140, 104, 10);
+    ctx.fillRect(-40, -142, 80, 10);
+    ctx.fillRect(-82, -122, 2, 46);
+    ctx.fillRect(80, -122, 2, 46);
 
-  // DIBUJO BASE DEL AUTO
-  ctx.fillStyle = car.color;
-  ctx.fillRect(-car.width / 2, -car.height / 2, car.width, car.height);
+    ctx.fillStyle = car.color;
+    ctx.fillRect(-32, -112, 10, 10);
+    ctx.fillRect(-30, -122, 10, 20);
+    ctx.fillRect(-28, -130, 6, 20);
+    ctx.fillRect(-26, -138, 6, 20);
+    ctx.fillRect(-20, -130, 2, 20);
+    ctx.fillRect(-18, -136, 2, 20);
+    ctx.fillRect(-24, -142, 10, 20);
 
-  ctx.fillRect(-car.width + 82, -car.height + 126, 156, 20);
-  ctx.fillRect(-car.width + 88, -car.height + 124, 144, 20);
-  ctx.fillRect(-car.width + 92, -car.height + 122, 132, 20);
-  ctx.fillRect(-car.width + 98, -car.height + 120, 120, 20);
-  ctx.fillRect(-car.width + 104, -car.height + 118, 108, 20);
-  ctx.fillRect(-car.width + 110, -car.height + 116, 96, 20);
+    ctx.fillRect(22, -112, 10, 10);
+    ctx.fillRect(20, -122, 10, 20);
+    ctx.fillRect(22, -130, 6, 20);
+    ctx.fillRect(20, -138, 6, 20);
+    ctx.fillRect(18, -130, 2, 20);
+    ctx.fillRect(16, -136, 2, 20);
+    ctx.fillRect(14, -142, 10, 20);
 
-  ctx.fillRect(-car.width + 86, -car.height + 374, 148, 20);
-  ctx.fillRect(-car.width + 90, -car.height + 376, 140, 20);
+    ctx.fillStyle = "#111111";
+    ctx.beginPath();
+    ctx.moveTo(-52, -106);
+    ctx.lineTo(52, -106);
+    ctx.lineTo(70, -90);
+    ctx.lineTo(65, -58);
+    ctx.lineTo(-65, -58);
+    ctx.lineTo(-70, -90);
+    ctx.closePath();
+    ctx.fill();
 
-  ctx.fillStyle = "#0f111c";
-  ctx.fillRect(-car.width + 120, -car.height + 140, 76, 2);
-  ctx.fillRect(-car.width + 114, -car.height + 142, 10, 2);
-  ctx.fillRect(-car.width + 110, -car.height + 144, 6, 2);
-  ctx.fillRect(-car.width + 108, -car.height + 146, 4, 4);
-  ctx.fillRect(-car.width + 192, -car.height + 142, 10, 2);
-  ctx.fillRect(-car.width + 200, -car.height + 144, 6, 2);
-  ctx.fillRect(-car.width + 204, -car.height + 146, 4, 4);
-  
-  ctx.fillRect(-car.width + 82, -car.height + 160, 10, 16);
-  ctx.fillRect(-car.width + 86, -car.height + 158, 6, 16);
-  ctx.fillRect(-car.width + 82, -car.height + 162, 6, 16);
-  ctx.fillRect(-car.width + 228, -car.height + 160, 10, 16);
-  ctx.fillRect(-car.width + 228, -car.height + 158, 6, 16);
-  ctx.fillRect(-car.width + 232, -car.height + 162, 6, 16);
+    ctx.fillRect(-70, -50, 6, 80);
+    ctx.fillRect(-68, -46, 6, 80);
+    ctx.fillRect(64, -50, 6, 80);
+    ctx.fillRect(62, -46, 6, 80);
+    ctx.fillStyle = "#111";
+    ctx.fillRect(-car.width / 2 + 20, car.height / 2 - 70, car.width - 40, 30);
 
-  ctx.fillStyle = "#0f111c";
-  ctx.fillRect(-car.width + 94, -car.height + 170, 132, 40);
-  ctx.fillRect(-car.width + 96, -car.height + 168, 128, 40);
-  ctx.fillRect(-car.width + 98, -car.height + 166, 124, 40);
-  ctx.fillRect(-car.width + 104, -car.height + 164, 110, 40);
+    ctx.fillStyle = isHeadlightOn ? headlightColor : "#333333";
+    ctx.fillRect(-car.width / 2 + 10, -car.height / 2, 25, 8);
+    ctx.fillRect(car.width / 2 - 35, -car.height / 2, 25, 8);
 
-  ctx.fillStyle = car.color;
-  ctx.fillRect(-car.width + 94, -car.height + 184, 132, 198);
-  ctx.fillRect(-car.width + 98, -car.height + 180, 124, 198);
-  ctx.fillRect(-car.width + 102, -car.height + 178, 116, 198);
+    ctx.fillStyle = isTaillightOn ? "#ff0000" : "#440000";
+    ctx.fillRect(-car.width / 2 + 10, car.height / 2 - 8, 25, 8);
+    ctx.fillRect(car.width / 2 - 35, car.height / 2 - 8, 25, 8);
 
-  ctx.fillStyle = "#0f0f0f";
-  ctx.fillRect(-car.width + 70, -car.height + 366, 180, 18);
-  ctx.fillRect(-car.width + 70, -car.height + 364, 60, 18);
-  ctx.fillRect(-car.width + 70, -car.height + 362, 40, 18);
-  ctx.fillRect(-car.width + 190, -car.height + 364, 60, 18);
-  ctx.fillRect(-car.width + 210, -car.height + 362, 40, 18);
-  ctx.fillRect(-car.width + 82, -car.height + 370, 156, 18);
-  ctx.fillRect(-car.width + 100, -car.height + 372, 120, 18);
+  } else {
+    // KOENIGSEGG COMPLETO
+    let shadowGrad = ctx.createRadialGradient(0, 15 - car.suspensionY, 10, 0, 15 - car.suspensionY, car.width);
+    shadowGrad.addColorStop(0, "rgba(0, 0, 0, 0.7)");
+    shadowGrad.addColorStop(0.5, "rgba(0, 0, 0, 0.35)");
+    shadowGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+    ctx.fillStyle = shadowGrad; ctx.beginPath();
+    ctx.ellipse(0, 15 - car.suspensionY, car.width / 1.5, car.height / 1.5, 0, 0, Math.PI * 2); ctx.fill();
 
+    ctx.fillStyle = car.color;
+    ctx.fillRect(-car.width / 2 - 16, -car.height / 2 + 70, 18, 4);
+    ctx.fillRect(car.width / 2 - 2, -car.height / 2 + 70, 18, 4);
+    ctx.fillStyle = "#0f0f0f";
+    ctx.fillRect(-car.width / 2 - 15, -car.height / 2 + 71, 12, 3);
+    ctx.fillRect(car.width / 2 + 2, -car.height / 2 + 71, 12, 3);
+
+    ctx.fillStyle = car.color;
+    ctx.fillRect(-car.width / 2, -car.height / 2, car.width, car.height);
+
+    ctx.fillRect(-car.width + 82, -car.height + 126, 156, 20);
+    ctx.fillRect(-car.width + 88, -car.height + 124, 144, 20);
+    ctx.fillRect(-car.width + 92, -car.height + 122, 132, 20);
+    ctx.fillRect(-car.width + 98, -car.height + 120, 120, 20);
+    ctx.fillRect(-car.width + 104, -car.height + 118, 108, 20);
+    ctx.fillRect(-car.width + 110, -car.height + 116, 96, 20);
+
+    ctx.fillRect(-car.width + 86, -car.height + 374, 148, 20);
+    ctx.fillRect(-car.width + 90, -car.height + 376, 140, 20);
+
+    ctx.fillStyle = "#0f111c";
+    ctx.fillRect(-car.width + 120, -car.height + 140, 76, 2);
+    ctx.fillRect(-car.width + 114, -car.height + 142, 10, 2);
+    ctx.fillRect(-car.width + 110, -car.height + 144, 6, 2);
+    ctx.fillRect(-car.width + 108, -car.height + 146, 4, 4);
+    ctx.fillRect(-car.width + 192, -car.height + 142, 10, 2);
+    ctx.fillRect(-car.width + 200, -car.height + 144, 6, 2);
+    ctx.fillRect(-car.width + 204, -car.height + 146, 4, 4);
+    
+    ctx.fillRect(-car.width + 82, -car.height + 160, 10, 16);
+    ctx.fillRect(-car.width + 86, -car.height + 158, 6, 16);
+    ctx.fillRect(-car.width + 82, -car.height + 162, 6, 16);
+    ctx.fillRect(-car.width + 228, -car.height + 160, 10, 16);
+    ctx.fillRect(-car.width + 228, -car.height + 158, 6, 16);
+    ctx.fillRect(-car.width + 232, -car.height + 162, 6, 16);
+
+    ctx.fillStyle = "#0f111c";
+    ctx.fillRect(-car.width + 94, -car.height + 170, 132, 40);
+    ctx.fillRect(-car.width + 96, -car.height + 168, 128, 40);
+    ctx.fillRect(-car.width + 98, -car.height + 166, 124, 40);
+    ctx.fillRect(-car.width + 104, -car.height + 164, 110, 40);
+
+    ctx.fillStyle = car.color;
+    ctx.fillRect(-car.width + 94, -car.height + 184, 132, 198);
+    ctx.fillRect(-car.width + 98, -car.height + 180, 124, 198);
+    ctx.fillRect(-car.width + 102, -car.height + 178, 116, 198);
+
+    ctx.fillStyle = "#0f0f0f";
+    ctx.fillRect(-car.width + 70, -car.height + 366, 180, 18);
+    ctx.fillRect(-car.width + 70, -car.height + 364, 60, 18);
+    ctx.fillRect(-car.width + 70, -car.height + 362, 40, 18);
+    ctx.fillRect(-car.width + 190, -car.height + 364, 60, 18);
+    ctx.fillRect(-car.width + 210, -car.height + 362, 40, 18);
+    ctx.fillRect(-car.width + 82, -car.height + 370, 156, 18);
+    ctx.fillRect(-car.width + 100, -car.height + 372, 120, 18);
+
+    if (spoilerType === "stock") {
+      ctx.fillRect(-car.width + 110, -car.height + 260, 20, 120);
+      ctx.fillRect(-car.width + 112, -car.height + 258, 20, 100);
+      ctx.fillRect(-car.width + 113, -car.height + 256, 20, 80);
+      ctx.fillRect(-car.width + 190, -car.height + 260, 20, 120);
+      ctx.fillRect(-car.width + 188, -car.height + 258, 20, 100);
+      ctx.fillRect(-car.width + 187, -car.height + 256, 20, 80);
+    }
+
+    ctx.fillStyle = car.color;
+    ctx.fillRect(-car.width + 68, -car.height + 360, 2, 28);
+    ctx.fillRect(-car.width + 250, -car.height + 360, 2, 28);
+
+    ctx.fillStyle = "#0f111c";
+    ctx.fillRect(-car.width + 94, -car.height + 190, 4, 96);
+    ctx.fillRect(-car.width + 96, -car.height + 194, 4, 90);
+    ctx.fillRect(-car.width + 220, -car.height + 190, 4, 96);
+    ctx.fillRect(-car.width + 218, -car.height + 194, 4, 90);
+
+    let bodyShadowLeft = ctx.createLinearGradient(-car.width / 2, 0, -car.width / 2 + 30, 0);
+    bodyShadowLeft.addColorStop(0, "rgba(0,0,0,0.4)");
+    bodyShadowLeft.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = bodyShadowLeft; ctx.fillRect(-car.width / 2, -car.height / 2, 30, car.height);
+
+    let bodyShadowRight = ctx.createLinearGradient(car.width / 2, 0, car.width / 2 - 30, 0);
+    bodyShadowRight.addColorStop(0, "rgba(0,0,0,0.4)");
+    bodyShadowRight.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = bodyShadowRight; ctx.fillRect(car.width / 2 - 30, -car.height / 2, 30, car.height);
+
+    let roofHighlight = ctx.createLinearGradient(0, -car.height / 2, 0, car.height / 2);
+    roofHighlight.addColorStop(0, "rgba(255,255,255,0.15)");
+    roofHighlight.addColorStop(0.3, "rgba(0,0,0,0)");
+    roofHighlight.addColorStop(0.7, "rgba(0,0,0,0.1)");
+    roofHighlight.addColorStop(1, "rgba(0,0,0,0.35)");
+    ctx.fillStyle = roofHighlight; ctx.fillRect(-car.width / 2, -car.height / 2, car.width, car.height);
+
+    // Faros
+    ctx.fillStyle = isHeadlightOn ? headlightColor : "#333333";
+    ctx.shadowColor = isHeadlightOn ? headlightColor : "transparent";
+    ctx.shadowBlur = isHeadlightOn ? 15 : 0;
+
+    ctx.fillRect(-58, -142, 9, 6); ctx.fillRect(-74, -140, 16, 6);
+    ctx.fillRect(-78, -134, 6, 18); ctx.fillRect(-78, -134, 10, 6); ctx.fillRect(-80, -132, 4, 26);
+    ctx.fillRect(45, -142, 9, 6); ctx.fillRect(54, -140, 16, 6);
+    ctx.fillRect(72, -134, 6, 18); ctx.fillRect(68, -136, 10, 6); ctx.fillRect(76, -132, 4, 26);
+    ctx.shadowBlur = 0;
+
+    // Luces traseras
+    ctx.fillStyle = isTaillightOn ? "#ff0000" : "#440000";
+    ctx.shadowColor = isTaillightOn ? "#ff0000" : "transparent";
+    ctx.shadowBlur = isTaillightOn ? 18 : 0;
+    ctx.fillRect(-car.width / 2 + 10, car.height / 2 - -2, 30, 6);
+    ctx.fillRect(car.width / 2 - 40, car.height / 2 - -2, 30, 6);
+    ctx.shadowBlur = 0;
+  }
+
+  // ALERONES OPCIONALES
   if (spoilerType === "gt") {
     ctx.fillStyle = "#111115";
     ctx.fillRect(-car.width / 2 - 12, car.height / 2 - 25, car.width + 24, 14);
@@ -989,142 +1792,58 @@ function draw() {
     ctx.fillStyle = "#e60000";
     ctx.fillRect(-car.width / 2 - 22, car.height / 2 - 20, 6, 26);
     ctx.fillRect(car.width / 2 + 16, car.height / 2 - 20, 6, 26);
-  } else {
-    ctx.fillRect(-car.width + 110, -car.height + 260, 20, 120);
-    ctx.fillRect(-car.width + 112, -car.height + 258, 20, 100);
-    ctx.fillRect(-car.width + 113, -car.height + 256, 20, 80);
-    ctx.fillRect(-car.width + 190, -car.height + 260, 20, 120);
-    ctx.fillRect(-car.width + 188, -car.height + 258, 20, 100);
-    ctx.fillRect(-car.width + 187, -car.height + 256, 20, 80);
   }
-
-  ctx.fillStyle = car.color;
-  ctx.fillRect(-car.width + 68, -car.height + 360, 2, 28);
-  ctx.fillRect(-car.width + 250, -car.height + 360, 2, 28);
-
-  ctx.fillStyle = "#0f111c";
-  ctx.fillRect(-car.width + 94, -car.height + 190, 4, 96);
-  ctx.fillRect(-car.width + 96, -car.height + 194, 4, 90);
-  ctx.fillRect(-car.width + 220, -car.height + 190, 4, 96);
-  ctx.fillRect(-car.width + 218, -car.height + 194, 4, 90);
-
-  // SOMBRAS Y PROFUNDIDAD SOBRE LA CARROCERÍA
-  let bodyShadowLeft = ctx.createLinearGradient(-car.width / 2, 0, -car.width / 2 + 30, 0);
-  bodyShadowLeft.addColorStop(0, "rgba(0,0,0,0.4)");
-  bodyShadowLeft.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = bodyShadowLeft;
-  ctx.fillRect(-car.width / 2, -car.height / 2, 30, car.height);
-
-  let bodyShadowRight = ctx.createLinearGradient(car.width / 2, 0, car.width / 2 - 30, 0);
-  bodyShadowRight.addColorStop(0, "rgba(0,0,0,0.4)");
-  bodyShadowRight.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = bodyShadowRight;
-  ctx.fillRect(car.width / 2 - 30, -car.height / 2, 30, car.height);
-
-  let roofHighlight = ctx.createLinearGradient(0, -car.height / 2, 0, car.height / 2);
-  roofHighlight.addColorStop(0, "rgba(255,255,255,0.15)");
-  roofHighlight.addColorStop(0.3, "rgba(0,0,0,0)");
-  roofHighlight.addColorStop(0.7, "rgba(0,0,0,0.1)");
-  roofHighlight.addColorStop(1, "rgba(0,0,0,0.35)");
-  ctx.fillStyle = roofHighlight;
-  ctx.fillRect(-car.width / 2, -car.height / 2, car.width, car.height);
 
   // MODO RAYOS X
   if (isXRayMode) {
     ctx.save();
-    
-    ctx.strokeStyle = "#00e5ff";
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(0, -car.height / 2 + 40);
-    ctx.lineTo(0, car.height / 2 - 40);
-    ctx.stroke();
+    ctx.strokeStyle = "#00e5ff"; ctx.lineWidth = 4; ctx.beginPath();
+    ctx.moveTo(0, -car.height / 2 + 40); ctx.lineTo(0, car.height / 2 - 40); ctx.stroke();
 
-    ctx.fillStyle = "rgba(230, 0, 0, 0.85)";
-    ctx.fillRect(-28, -car.height / 2 + 10, 56, 50);
-    ctx.strokeStyle = "#ffb700";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(-28, -car.height / 2 + 10, 56, 50);
+    ctx.fillStyle = "rgba(230, 0, 0, 0.85)"; ctx.fillRect(-28, -car.height / 2 + 10, 56, 50);
+    ctx.strokeStyle = "#ffb700"; ctx.lineWidth = 2; ctx.strokeRect(-28, -car.height / 2 + 10, 56, 50);
 
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "900 9px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("V8 BI-TURBO", 0, -car.height / 2 + 40);
+    ctx.fillStyle = "#ffffff"; ctx.font = "900 9px sans-serif"; ctx.textAlign = "center";
+    ctx.fillText(currentEngine.toUpperCase(), 0, -car.height / 2 + 40);
 
-    ctx.strokeStyle = "#00e5ff";
-    ctx.lineWidth = 3;
-    ctx.beginPath(); 
+    ctx.strokeStyle = "#00e5ff"; ctx.lineWidth = 3; ctx.beginPath(); 
     ctx.moveTo(-65, -car.height / 2 + 35); ctx.lineTo(65, -car.height / 2 + 35);
-    ctx.moveTo(-65, car.height / 2 - 40); ctx.lineTo(65, car.height / 2 - 40);
-    ctx.stroke();
+    ctx.moveTo(-65, car.height / 2 - 40); ctx.lineTo(65, car.height / 2 - 40); ctx.stroke();
     ctx.restore();
   }
 
-  // Faros Delanteros
-  let isHeadlightOn = car.headlights;
-  ctx.fillStyle = isHeadlightOn ? headlightColor : "#333333";
-  ctx.shadowColor = isHeadlightOn ? headlightColor : "transparent";
-  ctx.shadowBlur = isHeadlightOn ? 15 : 0;
-
-  ctx.fillRect(-58, -142, 9, 6);
-  ctx.fillRect(-74, -140, 16, 6);
-  ctx.fillRect(-78, -134, 6, 18);
-  ctx.fillRect(-78, -134, 10, 6);
-  ctx.fillRect(-80, -132, 4, 26);
-
-  ctx.fillRect(45, -142, 9, 6);
-  ctx.fillRect(54, -140, 16, 6);
-  ctx.fillRect(72, -134, 6, 18);
-  ctx.fillRect(68, -136, 10, 6);
-  ctx.fillRect(76, -132, 4, 26);
-
-  ctx.shadowBlur = 0;
-
+  // PROYECCIÓN DE LUZ DE FAROS
   if (isHeadlightOn) {
     let grad = ctx.createLinearGradient(0, -car.height / 2, 0, -car.height / 2 - 350);
-    grad.addColorStop(0, headlightColor);
-    grad.addColorStop(1, 'rgba(255, 255, 200, 0.0)');
-    ctx.fillStyle = grad;
-    ctx.beginPath();
+    grad.addColorStop(0, headlightColor); grad.addColorStop(1, 'rgba(255, 255, 200, 0.0)');
+    ctx.fillStyle = grad; ctx.beginPath();
     ctx.moveTo(-car.width / 2 + 10, -car.height / 2);
     ctx.lineTo(-car.width / 2 - 60, -car.height / 2 - 350);
     ctx.lineTo(car.width / 2 + 60, -car.height / 2 - 350);
     ctx.lineTo(car.width / 2 - 10, -car.height / 2);
-    ctx.closePath();
-    ctx.fill();
+    ctx.closePath(); ctx.fill();
   }
 
-  // Luces Traseras
-  let isBraking = keys["ArrowDown"] && car.speed > 0;
-  let isTaillightOn = car.taillights || isBraking || car.handbrake;
-
-  ctx.fillStyle = isTaillightOn ? "#ff0000" : "#440000";
-  ctx.shadowColor = isTaillightOn ? "#ff0000" : "transparent";
-  ctx.shadowBlur = isTaillightOn ? 18 : 0;
-  ctx.fillRect(-car.width / 2 + 10, car.height / 2 - -2, 30, 6);
-  ctx.fillRect(car.width / 2 - 40, car.height / 2 - -2, 30, 6);
-
-  // 5. EFECTO DE BACKFIRE (LLAMARADAS DE ESCAPE)
+  // EFECTOS DE FUEGO Y REVERSA
   if (backfireTimer > 0) {
     backfireTimer--;
-    ctx.fillStyle = Math.random() > 0.5 ? "#ff3300" : "#00e5ff";
-    ctx.shadowColor = "#ff3300";
-    ctx.shadowBlur = 12;
+    ctx.fillStyle = currentExhaust === "straight_pipe" ? "#00e5ff" : "#ff3300";
+    ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 12;
     ctx.fillRect(-18, car.height / 2 + 4, 10, Math.random() * 15 + 8);
     ctx.fillRect(8, car.height / 2 + 4, 10, Math.random() * 15 + 8);
     ctx.shadowBlur = 0;
   }
 
   if (car.speed < 0) {
-    ctx.fillStyle = "#fc8700";
-    ctx.shadowColor = "#fc8700";
-    ctx.shadowBlur = 10;
+    ctx.fillStyle = "#fc8700"; ctx.shadowColor = "#fc8700"; ctx.shadowBlur = 10;
     ctx.fillRect(+64, car.height / 2 - -2, 6, 4);
     ctx.fillRect(-70, car.height / 2 - -2, 6, 4);
+    ctx.shadowBlur = 0;
   }
 
   ctx.restore();
 
+  // Líneas de velocidad
   if (absSpeed > 40) {
     let lineCount = Math.floor((absSpeed / car.maxSpeed) * 20);
     let lineLength = 20 + (absSpeed * 0.25);
@@ -1133,10 +1852,7 @@ function draw() {
     for (let i = 0; i < lineCount; i++) {
       let lineX = Math.random() * canvas.width;
       let lineY = Math.random() * canvas.height;
-      ctx.beginPath();
-      ctx.moveTo(lineX, lineY);
-      ctx.lineTo(lineX, lineY + lineLength);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(lineX, lineY); ctx.lineTo(lineX, lineY + lineLength); ctx.stroke();
     }
   }
 
