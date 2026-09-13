@@ -183,10 +183,10 @@
 
   /* ESTRUCTURA IPHONE PRO MAX (SOLO SPOTIFY) */
   #iphoneContainer {
-    position: absolute; bottom: -680px; right: 30px; width: 320px; height: 630px;
+    position: fixed; bottom: -680px; right: 30px; width: 320px; height: 630px;
     background: #121318; border: 4px solid #2c2d35; border-radius: 48px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 0 4px rgba(255,255,255,0.2);
-    z-index: 100; transition: bottom 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.25);
+    z-index: 1000; transition: bottom 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.25);
     display: flex; flex-direction: column; padding: 10px; color: #fff; overflow: hidden;
     user-select: none;
   }
@@ -684,9 +684,13 @@
 
 <script>
 // AISLAMIENTO DE EVENTOS DEL CELULAR
-const iphoneElem = document.getElementById("iphoneContainer");
-iphoneElem.addEventListener('wheel', (e) => e.stopPropagation());
-iphoneElem.addEventListener('touchmove', (e) => e.stopPropagation());
+document.addEventListener("DOMContentLoaded", () => {
+  const iphoneElem = document.getElementById("iphoneContainer");
+  if (iphoneElem) {
+    iphoneElem.addEventListener('wheel', (e) => e.stopPropagation());
+    iphoneElem.addEventListener('touchmove', (e) => e.stopPropagation());
+  }
+});
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
